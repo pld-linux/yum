@@ -72,7 +72,7 @@ exit 0
 %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/yum.conf
 %config(noreplace) %verify(not size mtime md5) /etc/cron.daily/yum.cron
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
-%config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/%{name}
+%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/%{name}
 %{_datadir}/yum
 /var/cache/yum
 %{_mandir}/man*/*
