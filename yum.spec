@@ -1,7 +1,7 @@
 Summary:	RPM installer/updater
 Summary(pl):	Narzêdzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	2.0.7
+Version:	2.0.8
 Release:	1
 License:	GPL
 Group:		Applications/System
