@@ -12,7 +12,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 BuildArch:	noarch
 BuildRequires:	python
 BuildRequires:	gettext
-Requires:	python, rpm-python, rpm libxml2-python
+Requires:	python
+Requires:	python-libxml2
+Requires:	python-rpm
+Requires:	rpm 
 Prereq:		/sbin/chkconfig, /sbin/service
 
 %description
