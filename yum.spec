@@ -9,7 +9,7 @@ Source0:	http://www.linux.duke.edu/projects/yum/download/2.0/%{name}-%{version}.
 #Source1:	yum.conf
 #Source2:	yum.cron
 URL:		http://www.linux.duke.edu/yum/
-BuildRequires:	gettext
+BuildRequires:	gettext-devel
 BuildRequires:	python
 Requires(post,preun):	/sbin/chkconfig
 Requires:	python
@@ -39,11 +39,13 @@ zapytaniu u¿ytkownika w razie potrzeby.
 
 %install
 rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/etc/rc.d
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 # install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/etc/yum.conf
 # install -m 755 %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.daily/yum.cron
+mv $RPM_BUILD_ROOT/etc/init.d $RPM_BUILD_ROOT/etc/rc.d/
 
 %find_lang %{name}
 
