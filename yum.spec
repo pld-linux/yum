@@ -42,7 +42,7 @@ mkdir -p $RPM_BUILD_ROOT/etc/rc.d
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
-	PKGDIR=%{py_sitescriptdir}
+	PYLIBDIR=%{py_sitescriptdir}/..
 # install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/etc/yum.conf
 # install -m 755 %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.daily/yum.cron
 
@@ -72,7 +72,11 @@ exit 0
 %config(noreplace) %verify(not size mtime md5) /etc/cron.daily/yum.cron
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/%{name}
-%{py_sitescriptdir}/*.py[co]
+%dir %{py_sitescriptdir}/yum
+%dir %{py_sitescriptdir}/repomd
+%dir %{py_sitescriptdir}/rpmUtils
+%dir %{py_sitescriptdir}/urlgrabber
+%{py_sitescriptdir}/*/*.py[co]
 %{_datadir}/yum-cli
 /var/cache/yum
 %{_mandir}/man*/*
