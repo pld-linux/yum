@@ -1,11 +1,11 @@
 Summary:	RPM installer/updater
 Summary(pl):	Narzêdzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	2.0.8
+Version:	2.2.2
 Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.linux.duke.edu/projects/yum/download/2.0/%{name}-%{version}.tar.gz
+Source0:	http://www.linux.duke.edu/projects/yum/download/2.2/%{name}-%{version}.tar.gz
 #Source1:	yum.conf
 #Source2:	yum.cron
 URL:		http://www.linux.duke.edu/yum/
@@ -33,7 +33,6 @@ zapytaniu u¿ytkownika w razie potrzeby.
 %setup -q
 
 %build
-%configure
 %{__make}
 
 
@@ -45,9 +44,8 @@ mkdir -p $RPM_BUILD_ROOT/etc/rc.d
 	DESTDIR=$RPM_BUILD_ROOT
 # install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/etc/yum.conf
 # install -m 755 %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.daily/yum.cron
-mv $RPM_BUILD_ROOT/etc/init.d $RPM_BUILD_ROOT/etc/rc.d/
 
-%find_lang %{name}
+#%find_lang %{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -64,7 +62,7 @@ if [ "$1" = "0" ]; then
 fi
 exit 0
 
-%files -f %{name}.lang
+%files
 %defattr(644,root,root,755)
 %doc README AUTHORS COPYING TODO INSTALL ChangeLog
 %attr(755,root,root) %{_bindir}/yum
@@ -73,6 +71,6 @@ exit 0
 %config(noreplace) %verify(not size mtime md5) /etc/cron.daily/yum.cron
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/%{name}
-%{_datadir}/yum
+%{_datadir}/yum-cli
 /var/cache/yum
 %{_mandir}/man*/*
