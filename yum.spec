@@ -8,6 +8,7 @@ Group:		Applications/System
 Source0:	http://www.linux.duke.edu/projects/yum/download/2.2/%{name}-%{version}.tar.gz
 #Source1:	yum.conf
 #Source2:	yum.cron
+Patch0:	%{name}-chroot.patch
 URL:		http://www.linux.duke.edu/yum/
 BuildRequires:	gettext-devel
 BuildRequires:	python
@@ -31,6 +32,7 @@ zapytaniu u¿ytkownika w razie potrzeby.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__make}
