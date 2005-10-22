@@ -13,6 +13,8 @@ Patch0:		%{name}-chroot.patch
 URL:		http://www.linux.duke.edu/yum/
 BuildRequires:	gettext-devel
 BuildRequires:	python
+BuildRequires:	rpmbuild(macros) >= 1.228
+Requires:	rc-scripts
 Requires(post,preun):	/sbin/chkconfig
 Requires:	python
 Requires:	python-libxml2
@@ -45,6 +47,7 @@ install -d $RPM_BUILD_ROOT/etc/rc.d
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PYLIBDIR=%{py_sitescriptdir}/..
+
 # install -m 644 %{SOURCE1} $RPM_BUILD_ROOT/etc/yum.conf
 # install -m 755 %{SOURCE2} $RPM_BUILD_ROOT/etc/cron.daily/yum.cron
 
@@ -55,13 +58,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add yum
-#/etc/rc.d/init.d/yum condrestart >> /dev/null
+%service yum restart
 
 %preun
 if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del yum
-# XXX: check if running
-	/etc/rc.d/init.d/yum stop
+	%service -q yum stop
 fi
 exit 0
 
