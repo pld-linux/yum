@@ -53,6 +53,8 @@ install -d $RPM_BUILD_ROOT/etc/rc.d
 
 #%find_lang %{name}
 
+%py_postclean
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
