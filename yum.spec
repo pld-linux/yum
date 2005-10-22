@@ -6,6 +6,7 @@ Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.linux.duke.edu/projects/yum/download/2.2/%{name}-%{version}.tar.gz
+# Source0-md5:	734cc68e26c2fd07629616ab597acac6
 #Source1:	yum.conf
 #Source2:	yum.cron
 Patch0:	%{name}-chroot.patch
@@ -36,7 +37,6 @@ zapytaniu u¿ytkownika w razie potrzeby.
 
 %build
 %{__make}
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
