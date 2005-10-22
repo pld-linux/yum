@@ -1,5 +1,5 @@
---- yum-2.2.1/docs/yum.conf.5.chroot	2005-02-19 23:30:54.000000000 +0100
-+++ yum-2.2.1/docs/yum.conf.5	2005-04-08 19:53:02.000000000 +0200
+--- yum-2.3.4/docs/yum.conf.5.chroot
++++ yum-2.3.4/docs/yum.conf.5
 @@ -23,8 +23,10 @@
  following options:
  
@@ -12,10 +12,10 @@
 +combination with `--installroot'.
  
  .IP \fBreposdir\fR
- Directory where yum should look for .repo files for its configuration
-@@ -33,6 +35,10 @@
- repository options below. These will be merged with the repositories defined
- in /etc/yum.conf to form the complete set of repositories that yum will use.
+ A list of directories where yum should look for .repo files which define
+@@ -34,6 +36,10 @@
+ repositories defined in /etc/yum.conf to form the complete set of repositories
+ that yum will use.
  
 +Unless the prefixes `hostfs://' or `chrootfs://' are used, some magic
 +will be applied to determine the real path in combination with
@@ -24,7 +24,7 @@
  .IP \fBdebuglevel\fR
  Debug message output level. Practical range is 0\-10. Default is `2'.
  
-@@ -40,7 +46,10 @@
+@@ -41,7 +47,10 @@
  Error message output level. Practical range is 0\-10. Default is `2'.
  
  .IP \fBlogfile\fR
@@ -36,20 +36,30 @@
  
  .IP \fBgpgcheck\fR
  Either `1' or `0'. This tells yum whether or not it should perform a GPG
---- yum-2.2.1/yum/__init__.py.chroot	2005-03-15 08:34:03.000000000 +0100
-+++ yum-2.2.1/yum/__init__.py	2005-04-08 20:10:36.000000000 +0200
-@@ -298,19 +298,22 @@
-                 self.log(3, 'Arch Excluding %s' % po)
-                 self.pkgSack.delPackage(po)
-         self.log(2, 'Finished')
+--- yum-2.3.4/yum/__init__.py.chroot
++++ yum-2.3.4/yum/__init__.py
+@@ -102,9 +102,8 @@
+         # read each of them in using confpp, then parse them same as any other repo
+         # section - as above.
+         for reposdir in self.conf.reposdir:
+-            if os.path.exists(self.conf.installroot + '/' + reposdir):
+-                reposdir = self.conf.installroot + '/' + reposdir
+-            
++            reposdir  = self.conf.getRootedPath(reposdir)
 +
+             if os.path.isdir(reposdir):
+                 repofn = glob.glob(reposdir+'/*.repo')
+                 repofn.sort()
+@@ -426,18 +425,20 @@
+         self.pkgSack.excludeArchs(archlist)
+         self.log(3, 'Finished')
+         
 +    def __getLockfileName(self):
 +        lockfile = self.conf.configdata['lockfile']
 +        return self.conf.getRootedPath(lockfile,
 +                                       enforce_default  = True,
 +                                       defaults_to_host = False)
          
--        
 -        
 -    def doLock(self, lockfile):
 +    def doLock(self):
@@ -58,16 +68,15 @@
          # if we're not root then we don't lock - just return nicely
          if self.conf.getConfigOption('uid') != 0:
              return
- 
+             
 -        root = self.conf.installroot
 -        lockfile = root + '/' + lockfile # lock in the chroot
--
-+        lockfile=self.__getLockfileName()
-+        
+-        lockfile = os.path.normpath(lockfile) # get rid of silly preceding extra /
++        lockfile = self.__getLockfileName()
+         
          mypid=str(os.getpid())    
          while not self._lock(lockfile, mypid, 0644):
-             fd = open(lockfile, 'r')
-@@ -333,15 +336,14 @@
+@@ -461,15 +462,14 @@
                      msg = 'Existing lock %s: another copy is running. Aborting.' % lockfile
                      raise Errors.LockError(0, msg)
      
@@ -78,27 +87,27 @@
          # if we're not root then we don't lock - just return nicely
          if self.conf.getConfigOption('uid') != 0:
              return
- 
+         
 -        root = self.conf.installroot
 -        lockfile = root + '/' + lockfile # lock in the chroot
 +        lockfile=self.__getLockfileName()
- 
+         
          self._unlock(lockfile)
          
---- yum-2.2.1/yum/config.py.chroot	2005-03-15 07:09:18.000000000 +0100
-+++ yum-2.2.1/yum/config.py	2005-04-08 19:53:02.000000000 +0200
-@@ -194,7 +194,8 @@
+--- yum-2.3.4/yum/config.py.chroot
++++ yum-2.3.4/yum/config.py
+@@ -205,7 +205,8 @@
                        
          #defaults -either get them or set them
          optionstrings = [('cachedir', '/var/cache/yum'), 
 -                         ('logfile', '/var/log/yum.log'), 
 +                         ('logfile', '/var/log/yum.log'),
 +                         ('lockfile', '/var/run/yum.pid'),
-                          ('reposdir', '/etc/yum.repos.d'),
-                          ('rss-filename', 'yum-rss.xml'),
-                          ('pkgpolicy', 'newest'),
-@@ -270,9 +271,7 @@
-             
+                          ('reposdir', ['/etc/yum/repos.d', '/etc/yum.repos.d']),
+                          ('syslog_ident', None),
+                          ('syslog_facility', 'LOG_USER'),
+@@ -318,9 +319,7 @@
+ 
          # do the dirs - set the root if there is one (grumble)
          for option in ['cachedir', 'logfile']:
 -            path = self.configdata[option]
@@ -108,19 +117,9 @@
              self.configdata[option] = rootedpath
              setattr(self, option, rootedpath)
          
-@@ -314,8 +313,7 @@
-         # read each of them in using confpp, then parse them same as any other repo
-         # section - as above.
-         reposdir = self.getConfigOption('reposdir')
--        if os.path.exists(self.getConfigOption('installroot') + '/' + reposdir):
--            reposdir = self.getConfigOption('installroot') + '/' + reposdir
-+        reposdir = self.getRootedPath(reposdir)
-         
-         reposglob = reposdir + '/*.repo'
-         if os.path.exists(reposdir) and os.path.isdir(reposdir):
-@@ -334,6 +332,23 @@
-                     print e
-                     
+@@ -358,6 +357,23 @@
+                         "All plugin search paths must be absolute")
+ 
  
 +    def getRootedPath(self, path, enforce_default=False, defaults_to_host=False):
 +	instroot = self.configdata['installroot']
@@ -142,52 +141,58 @@
      def listConfigOptions(self):
          """return list of options available for global config"""
          return self.configdata.keys()
---- yum-2.2.1/cli.py.chroot	2005-03-15 08:19:11.000000000 +0100
-+++ yum-2.2.1/cli.py	2005-04-08 19:53:02.000000000 +0200
-@@ -126,7 +126,7 @@
-         sleeptime=0
-         root = '/'
-         installroot = None
--        conffile = '/etc/yum.conf'
-+        conffile = None
-         
+@@ -749,8 +765,7 @@
+ 
+     reposdirs = []
+     for dir in conf.reposdir:
+-        if os.path.exists(conf.installroot + '/' + dir):
+-            reposdirs.append(conf.installroot + '/' + dir)
++        reposdirs.append(conf.getRootedPath(dir))
+ 
+     repofn = []
+     for reposdir in reposdirs:
+--- yum-2.3.4/cli.py.chroot
++++ yum-2.3.4/cli.py
+@@ -105,7 +105,7 @@
+                 action="store_true", default=False, 
+                 help="run entirely from cache, don't update cache")
+         self.optparser.add_option("-c", "", dest="conffile", action="store", 
+-                default='/etc/yum.conf', help="config file location", 
++                default=None, help="config file location", 
+                 metavar=' [config file]')
+         self.optparser.add_option("-R", "", dest="sleeptime", action="store", 
+                 type='int', default=None, help="maximum command wait time",
+@@ -158,9 +158,12 @@
          try: 
-             for o,a in gopts:
-@@ -140,12 +140,14 @@
-             
-             # if the conf file is inside the  installroot - use that.
+             # If the conf file is inside the  installroot - use that.
              # otherwise look for it in the normal root
--            if installroot:
--                if os.access(installroot + '/' + conffile, os.R_OK):
-+            if conffile==None:
-+                conffile = '/etc/yum.conf'
-+                if installroot and os.access(installroot + '/' + conffile, os.R_OK):
-                     conffile = installroot + '/' + conffile
--                    
+-            if opts.installroot:
+-                if os.access(opts.installroot+'/'+opts.conffile, os.R_OK):
++            if opts.conffile==None:
++                opts.conffile = '/etc/yum.conf'
++                if opts.installroot and os.access(opts.installroot+'/'+opts.conffile, os.R_OK):
+                     opts.conffile = opts.installroot+'/'+opts.conffile
 +
-+            if installroot:
-                 root = installroot
--                    
-+
-             try:
-                 self.conf = yumconf(configfile = conffile, root = root)
-             except yum.Errors.ConfigError, e:
---- yum-2.2.1/yummain.py.chroot	2005-01-07 14:45:50.000000000 +0100
-+++ yum-2.2.1/yummain.py	2005-04-08 19:53:02.000000000 +0200
-@@ -41,7 +41,7 @@
++            if opts.installroot:
+                 root=opts.installroot
+             else:
+                 root = '/'
+--- yum-2.3.4/yummain.py.chroot
++++ yum-2.3.4/yummain.py
+@@ -60,7 +60,7 @@
      def unlock():
          try:
              base.closeRpmDB()
--            base.doUnlock('/var/run/yum.pid')
+-            base.doUnlock(YUM_PID_FILE)
 +            base.doUnlock()
          except Errors.LockError, e:
              sys.exit(200)
  
-@@ -58,7 +58,7 @@
-         sys.exit(1)
-         
+@@ -78,7 +78,7 @@
+     except Errors.YumBaseError, e:
+         exFatal(e)
      try:
--        base.doLock('/var/run/yum.pid')
+-        base.doLock(YUM_PID_FILE)
 +        base.doLock()
      except Errors.LockError, e:
          base.errorlog(0,'%s' % e.msg)
