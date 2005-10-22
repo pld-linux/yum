@@ -9,7 +9,7 @@ Source0:	http://www.linux.duke.edu/projects/yum/download/2.2/%{name}-%{version}.
 # Source0-md5:	734cc68e26c2fd07629616ab597acac6
 #Source1:	yum.conf
 #Source2:	yum.cron
-Patch0:	%{name}-chroot.patch
+Patch0:		%{name}-chroot.patch
 URL:		http://www.linux.duke.edu/yum/
 BuildRequires:	gettext-devel
 BuildRequires:	python
@@ -17,7 +17,7 @@ Requires(post,preun):	/sbin/chkconfig
 Requires:	python
 Requires:	python-libxml2
 Requires:	python-rpm
-Requires:	rpm 
+Requires:	rpm
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -40,7 +40,7 @@ zapytaniu u¿ytkownika w razie potrzeby.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-mkdir -p $RPM_BUILD_ROOT/etc/rc.d
+install -d $RPM_BUILD_ROOT/etc/rc.d
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -70,10 +70,10 @@ exit 0
 %doc README AUTHORS COPYING TODO INSTALL ChangeLog
 %attr(755,root,root) %{_bindir}/yum
 %attr(755,root,root) %{_bindir}/yum-arch
-%config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/yum.conf
-%config(noreplace) %verify(not size mtime md5) /etc/cron.daily/yum.cron
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum.conf
+%config(noreplace) %verify(not md5 mtime size) /etc/cron.daily/yum.cron
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
-%attr(640,root,root) %config(noreplace) %verify(not size mtime md5) /etc/logrotate.d/%{name}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %dir %{py_sitescriptdir}/yum
 %dir %{py_sitescriptdir}/repomd
 %dir %{py_sitescriptdir}/rpmUtils
