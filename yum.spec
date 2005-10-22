@@ -75,7 +75,7 @@ exit 0
 %attr(755,root,root) %{_bindir}/yum
 %attr(755,root,root) %{_bindir}/yum-arch
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum.conf
-%config(noreplace) %verify(not md5 mtime size) /etc/cron.daily/yum.cron
+%attr(755,root,root) /etc/cron.daily/yum.cron
 %attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %dir %{py_sitescriptdir}/yum
