@@ -1,12 +1,12 @@
 Summary:	RPM installer/updater
 Summary(pl):	Narzêdzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	2.4.0
-Release:	0.2
+Version:	2.6.1
+Release:	0.1
 License:	GPL
 Group:		Applications/System
-Source0:	http://linux.duke.edu/projects/yum/download/2.4/%{name}-%{version}.tar.gz
-# Source0-md5:	c19a471ef5f72ddca3f100a60a07d1b3
+Source0:	http://linux.duke.edu/projects/yum/download/2.6/%{name}-%{version}.tar.gz
+# Source0-md5:	2dc94410341ef7f4171a7ecdc00be5bf
 Patch0:		%{name}-chroot.patch
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
@@ -36,7 +36,7 @@ zapytaniu u¿ytkownika w razie potrzeby.
 
 %prep
 %setup -q
-%patch0 -p1
+#%patch0 -p1 CHECKME
 
 %build
 %{__make}
