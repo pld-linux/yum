@@ -2,7 +2,7 @@ Summary:	RPM installer/updater
 Summary(pl):	Narzêdzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	2.6.1
-Release:	0.1
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/2.6/%{name}-%{version}.tar.gz
