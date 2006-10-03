@@ -68,6 +68,7 @@ fi
 %defattr(644,root,root,755)
 %doc README AUTHORS COPYING TODO INSTALL ChangeLog
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum.conf
+%dir %{_sysconfdir}/yum
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-daily.yum
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %attr(755,root,root) %{_bindir}/yum
