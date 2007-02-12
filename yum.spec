@@ -1,5 +1,5 @@
 Summary:	RPM installer/updater
-Summary(pl.UTF-8):   Narzędzie do instalowania/uaktualniania pakietów RPM
+Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	2.6.1
 Release:	2
