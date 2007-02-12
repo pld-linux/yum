@@ -1,5 +1,5 @@
 Summary:	RPM installer/updater
-Summary(pl):	Narzêdzie do instalowania/uaktualniania pakietów RPM
+Summary(pl.UTF-8):   NarzÄ™dzie do instalowania/uaktualniania pakietÃ³w RPM
 Name:		yum
 Version:	2.6.1
 Release:	2
@@ -29,10 +29,10 @@ Yum is a utility that can check for and automatically download and
 install updated RPM packages. Dependencies are obtained and downloaded
 automatically prompting the user as necessary.
 
-%description -l pl
-Yum to narzêdzie sprawdzaj±ce i automatycznie ¶ci±gaj±ce i instaluj±ce
-uaktualnione pakiety RPM. Zale¿no¶ci s± ¶ci±gane automatycznie po
-zapytaniu u¿ytkownika w razie potrzeby.
+%description -l pl.UTF-8
+Yum to narzÄ™dzie sprawdzajÄ…ce i automatycznie Å›ciÄ…gajÄ…ce i instalujÄ…ce
+uaktualnione pakiety RPM. ZaleÅ¼noÅ›ci sÄ… Å›ciÄ…gane automatycznie po
+zapytaniu uÅ¼ytkownika w razie potrzeby.
 
 %prep
 %setup -q
