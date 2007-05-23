@@ -1,0 +1,52 @@
+diff -ur yum-3.0.1-orig/yum/comps.py yum-3.0.1/yum/comps.py
+--- yum-3.0.1-orig/yum/comps.py	2007-05-23 13:43:33.803883334 +0200
++++ yum-3.0.1/yum/comps.py	2007-05-23 13:44:07.278249384 +0200
+@@ -15,7 +15,7 @@
+ 
+ import sys
+ from constants import *
+-from cElementTree import iterparse
++from xml.etree.cElementTree import iterparse
+ import exceptions
+ 
+ 
+Tylko w yum-3.0.1/yum: comps.py~
+diff -ur yum-3.0.1-orig/yum/mdparser.py yum-3.0.1/yum/mdparser.py
+--- yum-3.0.1-orig/yum/mdparser.py	2007-05-23 13:43:33.803883334 +0200
++++ yum-3.0.1/yum/mdparser.py	2007-05-23 13:44:15.830994907 +0200
+@@ -15,7 +15,7 @@
+ # Copyright 2005 Duke University 
+ 
+ import gzip
+-from cElementTree import iterparse
++from xml.etree.cElementTree import iterparse
+ 
+ try:
+     from cStringIO import StringIO
+Tylko w yum-3.0.1/yum: mdparser.py~
+diff -ur yum-3.0.1-orig/yum/repoMDObject.py yum-3.0.1/yum/repoMDObject.py
+--- yum-3.0.1-orig/yum/repoMDObject.py	2007-05-23 13:43:33.723888832 +0200
++++ yum-3.0.1/yum/repoMDObject.py	2007-05-23 13:44:25.170353034 +0200
+@@ -14,7 +14,7 @@
+ # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ # Copyright 2006 Duke University
+ 
+-from cElementTree import iterparse
++from xml.etree.cElementTree import iterparse
+ from Errors import RepoMDError
+ 
+ import sys
+Tylko w yum-3.0.1/yum: repoMDObject.py~
+diff -ur yum-3.0.1-orig/yum/update_md.py yum-3.0.1/yum/update_md.py
+--- yum-3.0.1-orig/yum/update_md.py	2007-05-23 13:43:33.723888832 +0200
++++ yum-3.0.1/yum/update_md.py	2007-05-23 13:44:39.492702025 +0200
+@@ -24,7 +24,7 @@
+ 
+ from yum.yumRepo import YumRepository
+ 
+-from cElementTree import iterparse
++from xml.etree.cElementTree import iterparse
+ 
+ 
+ class UpdateNoticeException(exceptions.Exception):
+Tylko w yum-3.0.1/yum: update_md.py~
