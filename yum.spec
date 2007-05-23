@@ -2,7 +2,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.0.1
-Release:	2
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.0/%{name}-%{version}.tar.gz
@@ -17,7 +17,7 @@ Requires:	python
 Requires:	python-cElementTree >= 1.0.5
 Requires:	python-libxml2
 Requires:	python-rpm
-Requires:	python-sqlite1
+Requires:	python-sqlite
 Requires:	python-urlgrabber
 Requires:	rc-scripts
 Requires:	rpm
@@ -55,13 +55,13 @@ install -d $RPM_BUILD_ROOT/etc/rc.d
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/sbin/chkconfig --add yum
-%service yum restart
+/sbin/chkconfig --add yum-updatesd
+%service yum-updatesd restart
 
 %preun
 if [ "$1" = "0" ]; then
-	/sbin/chkconfig --del yum
-	%service -q yum stop
+	/sbin/chkconfig --del yum-updatesd
+	%service -q yum-updatesd stop
 fi
 
 %files
