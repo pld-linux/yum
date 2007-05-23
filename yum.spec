@@ -1,12 +1,12 @@
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	2.6.1
+Version:	3.0.1
 Release:	2
 License:	GPL
 Group:		Applications/System
-Source0:	http://linux.duke.edu/projects/yum/download/2.6/%{name}-%{version}.tar.gz
-# Source0-md5:	2dc94410341ef7f4171a7ecdc00be5bf
+Source0:	http://linux.duke.edu/projects/yum/download/3.0/%{name}-%{version}.tar.gz
+# Source0-md5:	e4ec5720315abeed044f71e384488f93
 Patch0:		%{name}-chroot.patch
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
@@ -70,15 +70,13 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum.conf
 %dir %{_sysconfdir}/yum
 %dir %{_sysconfdir}/yum.repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-daily.yum
+%dir %{_sysconfdir}/dbus-1/system.d/yum-updatesd.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-updatesd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %attr(755,root,root) %{_bindir}/yum
-%attr(755,root,root) %{_bindir}/yum-arch
-%attr(755,root,root) /etc/cron.daily/yum.cron
-%attr(755,root,root) /etc/cron.weekly/yum.cron
-%attr(754,root,root) /etc/rc.d/init.d/%{name}
+%attr(755,root,root) %{_sbindir}/yum-updatesd
+%attr(754,root,root) /etc/rc.d/init.d/yum-updatesd
 %dir %{py_sitescriptdir}/yum
-%dir %{py_sitescriptdir}/repomd
 %dir %{py_sitescriptdir}/rpmUtils
 %{py_sitescriptdir}/*/*.py[co]
 %{_datadir}/yum-cli
