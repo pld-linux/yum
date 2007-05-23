@@ -7,14 +7,13 @@ License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.0/%{name}-%{version}.tar.gz
 # Source0-md5:	e4ec5720315abeed044f71e384488f93
-Patch0:		%{name}-chroot.patch
+Patch0:		%{name}-python2.5.patch
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 Requires(post,preun):	/sbin/chkconfig
-Requires:	python
-Requires:	python-cElementTree >= 1.0.5
+Requires:	python >= 2.5
 Requires:	python-libxml2
 Requires:	python-rpm
 Requires:	python-sqlite
@@ -36,7 +35,7 @@ zapytaniu użytkownika w razie potrzeby.
 
 %prep
 %setup -q
-#%patch0 -p1 CHECKME
+%patch0 -p1
 
 %build
 %{__make}
