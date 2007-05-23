@@ -1,13 +1,12 @@
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.0.1
+Version:	3.2.0
 Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://linux.duke.edu/projects/yum/download/3.0/%{name}-%{version}.tar.gz
-# Source0-md5:	e4ec5720315abeed044f71e384488f93
-Patch0:		%{name}-python2.5.patch
+Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
+# Source0-md5:	535213fcdea6c3ea9a0839f9a2853492
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-pythonprov
@@ -35,7 +34,6 @@ zapytaniu użytkownika w razie potrzeby.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %{__make}
@@ -66,9 +64,9 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README AUTHORS COPYING TODO INSTALL ChangeLog
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum.conf
 %dir %{_sysconfdir}/yum
-%dir %{_sysconfdir}/yum.repos.d
+%dir %{_sysconfdir}/yum/repos.d
 %dir %{_sysconfdir}/dbus-1/system.d/yum-updatesd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-updatesd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
