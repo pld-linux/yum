@@ -40,7 +40,7 @@ zapytaniu użytkownika w razie potrzeby.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/etc/rc.d
+install -d $RPM_BUILD_ROOT{/etc/{rc.d,yum/pluginconf.d},%{_libdir}/yum-plugins}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -67,6 +67,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum.conf
 %dir %{_sysconfdir}/yum
 %dir %{_sysconfdir}/yum/repos.d
+%dir %{_sysconfdir}/yum/pluginconf.d
 %dir %{_sysconfdir}/dbus-1/system.d/yum-updatesd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-updatesd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
@@ -75,6 +76,7 @@ fi
 %attr(754,root,root) /etc/rc.d/init.d/yum-updatesd
 %dir %{py_sitescriptdir}/yum
 %dir %{py_sitescriptdir}/rpmUtils
+%{_libdir}/yum-plugins
 %{py_sitescriptdir}/*/*.py[co]
 %{_datadir}/yum-cli
 /var/cache/yum
