@@ -7,6 +7,7 @@ License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
 # Source0-md5:	535213fcdea6c3ea9a0839f9a2853492
+Patch0:		%{name}-missingok.patch
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-pythonprov
@@ -34,6 +35,7 @@ zapytaniu użytkownika w razie potrzeby.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__make}
