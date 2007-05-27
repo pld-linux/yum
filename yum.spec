@@ -65,7 +65,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README AUTHORS COPYING TODO INSTALL ChangeLog
+%doc README AUTHORS TODO INSTALL ChangeLog
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum.conf
 %dir %{_sysconfdir}/yum
 %dir %{_sysconfdir}/yum/repos.d
