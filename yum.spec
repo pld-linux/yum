@@ -17,6 +17,7 @@ Requires:	python >= 2.5
 Requires:	python-libxml2
 Requires:	python-rpm
 Requires:	python-sqlite
+Requires:	python-sqlite1
 Requires:	python-urlgrabber
 Requires:	rc-scripts
 Requires:	rpm
@@ -42,7 +43,7 @@ zapytaniu użytkownika w razie potrzeby.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc/{rc.d,yum/pluginconf.d},%{_libdir}/yum-plugins}
+install -d $RPM_BUILD_ROOT{/etc/{rc.d,yum/pluginconf.d},%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -79,6 +80,7 @@ fi
 %dir %{py_sitescriptdir}/yum
 %dir %{py_sitescriptdir}/rpmUtils
 %{_libdir}/yum-plugins
+%{_datadir}/yum-plugins
 %{py_sitescriptdir}/*/*.py[co]
 %{_datadir}/yum-cli
 /var/cache/yum
