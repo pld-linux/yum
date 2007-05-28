@@ -102,27 +102,33 @@ diff -ur yum-3.2.0/yum/sqlitesack.py yum-3.2.0-new/yum/sqlitesack.py
          self._files = {}
          self.sack = repo.sack
          self.repoid = repo.id
-@@ -187,9 +189,24 @@
+@@ -187,9 +189,30 @@
                          self.pkgKey)
              executeSQL(cur, query)
              for ob in cur:
 -                self.prco[prcotype].append((ob['name'], ob['flags'],
 -                                           (ob['epoch'], ob['version'], 
 -                                            ob['release'])))
-+                fl = ob['flags'].split(',')
-+                if 'MISSINGOK' in fl:
-+                    fl.remove('MISSINGOK')
-+                    flags = ','.join(fl)
-+                    if not flags:
-+                        flags = None
-+                    if prcotype == 'requires':
-+                        self.prco['suggests'].append((ob['name'], flags,
-+                                                     (ob['epoch'], ob['version'], 
-+                                                      ob['release'])))
-+                    elif prcotype == 'provides':
-+                        self.prco['enhances'].append((ob['name'], flags,
-+                                                     (ob['epoch'], ob['version'], 
-+                                                      ob['release'])))
++                fl = ob['flags']
++                if fl:
++                    fl = fl.split(',')
++                    if 'MISSINGOK' in fl:
++                        fl.remove('MISSINGOK')
++                        flags = ','.join(fl)
++                        if not flags:
++                            flags = None
++                        if prcotype == 'requires':
++                            self.prco['suggests'].append((ob['name'], flags,
++                                                         (ob['epoch'], ob['version'], 
++                                                          ob['release'])))
++                        elif prcotype == 'provides':
++                            self.prco['enhances'].append((ob['name'], flags,
++                                                         (ob['epoch'], ob['version'], 
++                                                          ob['release'])))
++                    else:
++                        self.prco[prcotype].append((ob['name'], ob['flags'],
++                                                   (ob['epoch'], ob['version'], 
++                                                    ob['release'])))
 +                else:
 +                    self.prco[prcotype].append((ob['name'], ob['flags'],
 +                                               (ob['epoch'], ob['version'], 
