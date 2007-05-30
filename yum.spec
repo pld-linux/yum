@@ -7,6 +7,7 @@ License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
 # Source0-md5:	535213fcdea6c3ea9a0839f9a2853492
+Source1:	%{name}-pld-source.repo
 Patch0:		%{name}-missingok.patch
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
@@ -48,6 +49,7 @@ install -d $RPM_BUILD_ROOT{/etc/{rc.d,yum/pluginconf.d},%{_libdir}/yum-plugins,%
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PYLIBDIR=%{py_sitescriptdir}/..
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld-source.repo
 
 %py_postclean
 
@@ -69,7 +71,7 @@ fi
 %doc README AUTHORS TODO INSTALL ChangeLog
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum.conf
 %dir %{_sysconfdir}/yum
-%dir %{_sysconfdir}/yum/repos.d
+%{_sysconfdir}/yum/repos.d
 %dir %{_sysconfdir}/yum/pluginconf.d
 %dir %{_sysconfdir}/dbus-1/system.d/yum-updatesd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-updatesd.conf
