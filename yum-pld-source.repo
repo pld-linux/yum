@@ -1,0 +1,19 @@
+# $Id$
+# PLD <http://www.pld-linux.org/>
+
+[th-arch]
+name=PLD 3.0 Th - Architecture specific
+baseurl=ftp://ftp.th.pld-linux.org/dists/th/PLD/$arch/RPMS/
+
+[th-noarch]
+name=PLD 3.0 Th - Architecture independent
+baseurl=ftp://ftp.th.pld-linux.org/dists/th/PLD/noarch/RPMS/
+
+[th-test-arch]
+name=PLD 3.0 Th (test) - Architecture specific
+baseurl=ftp://ftp.th.pld-linux.org/dists/th/test/$arch/RPMS/
+
+[th-test-noarch]
+name=PLD 3.0 Th (test) - Architecture independent
+baseurl=ftp://ftp.th.pld-linux.org/dists/th/test/noarch/RPMS/
+
