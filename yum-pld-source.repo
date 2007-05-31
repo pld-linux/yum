@@ -12,7 +12,9 @@ baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/updates/$arch/RPMS/
 [ac-ready]
 name=PLD 2.0 Ac (test)
 baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/ready/$arch/RPMS/
+enabled=0
 
 [ac-test]
 name=PLD 2.0 Ac (test)
 baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/test/$arch/RPMS/
+enabled=0
