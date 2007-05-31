@@ -15,6 +15,7 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 Requires(post,preun):	/sbin/chkconfig
 Requires:	python >= 2.5
+Requires:	python-cElementTree
 Requires:	python-libxml2
 Requires:	python-rpm
 Requires:	python-sqlite
