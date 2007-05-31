@@ -2,13 +2,14 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.0
-Release:	3
+Release:	4
 License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
 # Source0-md5:	535213fcdea6c3ea9a0839f9a2853492
 Source1:	%{name}-pld-source.repo
 Patch0:		%{name}-missingok.patch
+Patch1:		%{name}-amd64.patch
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-pythonprov
@@ -23,7 +24,6 @@ Requires:	python-sqlite1
 Requires:	python-urlgrabber
 Requires:	rc-scripts
 Requires:	rpm
-BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -39,6 +39,7 @@ zapytaniu użytkownika w razie potrzeby.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__make}
@@ -72,7 +73,8 @@ fi
 %doc README AUTHORS TODO INSTALL ChangeLog
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum.conf
 %dir %{_sysconfdir}/yum
-%{_sysconfdir}/yum/repos.d
+%dir %{_sysconfdir}/yum/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/repos.d/*.repo
 %dir %{_sysconfdir}/yum/pluginconf.d
 %dir %{_sysconfdir}/dbus-1/system.d/yum-updatesd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-updatesd.conf
