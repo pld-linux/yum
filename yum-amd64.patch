@@ -1,0 +1,51 @@
+--- yum-3.2.0/rpmUtils/arch.py~	2007-04-27 15:58:04.000000000 +0300
++++ yum-3.2.0/rpmUtils/arch.py	2007-05-31 14:00:56.920945155 +0300
+@@ -4,7 +4,7 @@
+ import os
+ 
+ # dict mapping arch -> ( multicompat, best personality, biarch personality )
+-multilibArches = { "x86_64":  ( "athlon", "x86_64", "athlon" ),
++multilibArches = { "amd64":  ( "athlon", "amd64", "athlon" ),
+                    "sparc64v": ( "sparc", "sparcv9v", "sparc64v" ),
+                    "sparc64": ( "sparc", "sparcv9", "sparc64" ),
+                    "ppc64":   ( "ppc", "ppc", "ppc64" ),
+@@ -21,9 +21,9 @@
+     "i386": "noarch",
+     
+     # amd64
+-    "x86_64": "athlon",
+-    "amd64": "x86_64",
+-    "ia32e": "x86_64",
++    "amd64": "athlon",
++    "x86_64": "amd64",
++    "ia32e": "amd64",
+     
+     # itanium
+     "ia64": "i686",
+@@ -210,7 +210,7 @@
+     return arch
+ 
+ def getCanonX86_64Arch(arch):
+-    if arch != "x86_64":
++    if arch != "amd64":
+         return arch
+ 
+     vendor = None
+@@ -242,6 +242,8 @@
+             pass
+         
+     arch = os.uname()[4]
++    if arch == "x86_64":
++        arch = "amd64"
+ 
+     if (len(arch) == 4 and arch[0] == "i" and arch[2:4] == "86"):
+         return getCanonX86Arch(arch)
+@@ -250,7 +252,7 @@
+         return getCanonPPCArch(arch)
+     if arch.startswith("sparc"):
+         return getCanonSPARCArch(arch)
+-    if arch == "x86_64":
++    if arch == "amd64":
+         return getCanonX86_64Arch(arch)
+ 
+     return arch
