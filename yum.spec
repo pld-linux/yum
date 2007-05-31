@@ -22,7 +22,6 @@ Requires:	python-sqlite1
 Requires:	python-urlgrabber
 Requires:	rc-scripts
 Requires:	rpm
-BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
