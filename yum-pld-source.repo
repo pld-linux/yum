@@ -3,18 +3,18 @@
 
 [ac]
 name=PLD 2.0 Ac
-baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/PLD/$arch/RPMS/
+baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/PLD/$arch/PLD/RPMS/
 
 [ac-updates]
 name=PLD 2.0 Ac (updates)
-baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/updates/$arch/RPMS/
+baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/updates/$arch/
 
 [ac-ready]
 name=PLD 2.0 Ac (test)
-baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/ready/$arch/RPMS/
+baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/ready/$arch/
 enabled=0
 
 [ac-test]
 name=PLD 2.0 Ac (test)
-baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/test/$arch/RPMS/
+baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/test/$arch/
 enabled=0
