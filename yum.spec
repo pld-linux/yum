@@ -1,12 +1,12 @@
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.2.0
-Release:	2
+Version:	3.2.2
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
-# Source0-md5:	535213fcdea6c3ea9a0839f9a2853492
+# Source0-md5:	c6a9e8cc846fe9d080d61bd1b2146cfc
 Source1:	%{name}-pld-source.repo
 Patch0:		%{name}-missingok.patch
 Patch1:     %{name}-obsoletes.patch
