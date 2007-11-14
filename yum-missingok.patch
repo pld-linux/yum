@@ -91,20 +91,20 @@ diff -ur yum-3.2.0/yum/rpmsack.py yum-3.2.0-new/yum/rpmsack.py
 diff -ur yum-3.2.0/yum/sqlitesack.py yum-3.2.0-new/yum/sqlitesack.py
 --- yum-3.2.0/yum/sqlitesack.py	2007-04-25 20:55:36.000000000 +0200
 +++ yum-3.2.0-new/yum/sqlitesack.py	2007-05-26 21:06:18.951806377 +0200
-@@ -39,7 +39,9 @@
-         self.prco = { 'obsoletes': [],
-                       'conflicts': [],
-                       'requires': [],
--                      'provides': [] }
-+                      'provides': [],
-+                      'suggests': [],
-+                      'enhances': [] }
+@@ -38,7 +38,9 @@
+         self.prco = { 'obsoletes': (),
+                       'conflicts': (),
+                       'requires': (),
+-                      'provides': () }
++                      'provides': (),
++                      'suggests': (),
++                      'enhances': () }
          self._files = {}
          self.sack = repo.sack
          self.repoid = repo.id
-@@ -187,9 +189,30 @@
-                         self.pkgKey)
+@@ -189,9 +191,30 @@
              executeSQL(cur, query)
+             self.prco[prcotype] = [ ]
              for ob in cur:
 -                self.prco[prcotype].append((ob['name'], ob['flags'],
 -                                           (ob['epoch'], ob['version'], 
