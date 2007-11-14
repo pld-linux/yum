@@ -1,0 +1,138 @@
+diff -ur yum-3.2.0/output.py yum-3.2.0-new/output.py
+--- yum-3.2.0/output.py	2007-01-21 21:21:37.000000000 +0100
++++ yum-3.2.0-new/output.py	2007-05-26 21:06:18.981804315 +0200
+@@ -268,6 +268,9 @@
+                     appended = '     replacing  %s.%s %s\n\n' % (obspo.name,
+                         obspo.arch, obspo.printVer())
+                     msg = msg+appended
++                for sug in txmbr.po.prco['suggests']:
++                    appended = '     suggests   %s\n\n' % prco_tuple_to_string(sug)
++                    msg = msg+appended
+                 totalmsg = totalmsg + msg
+         
+             if pkglist:
+diff -ur yum-3.2.0/rpmUtils/miscutils.py yum-3.2.0-new/rpmUtils/miscutils.py
+--- yum-3.2.0/rpmUtils/miscutils.py	2007-04-08 05:56:54.000000000 +0200
++++ yum-3.2.0-new/rpmUtils/miscutils.py	2007-05-26 21:06:18.961805690 +0200
+@@ -299,6 +299,8 @@
+     return s
+     
+ def flagToString(flags):
++    if flags & (1 << 19): return ('OPTIONAL', flagToString(flags & 0xf))
++
+     flags = flags & 0xf
+ 
+     if flags == 0: return None
+diff -ur yum-3.2.0/yum/packages.py yum-3.2.0-new/yum/packages.py
+--- yum-3.2.0/yum/packages.py	2007-04-26 00:19:28.000000000 +0200
++++ yum-3.2.0-new/yum/packages.py	2007-05-26 21:06:18.951806377 +0200
+@@ -183,6 +183,8 @@
+ 
+     def __init__(self):
+         self.prco = {}
++        self.prco['suggests'] = [] # (name, flag, (e,v,r))
++        self.prco['enhances'] = [] # (name, flag, (e,v,r))
+         self.prco['obsoletes'] = [] # (name, flag, (e,v,r))
+         self.prco['conflicts'] = [] # (name, flag, (e,v,r))
+         self.prco['requires'] = [] # (name, flag, (e,v,r))
+@@ -677,7 +679,6 @@
+ 
+     def _populatePrco(self):
+         "Populate the package object with the needed PRCO interface."
+-
+         tag2prco = { "OBSOLETE": "obsoletes",
+                      "CONFLICT": "conflicts",
+                      "REQUIRE": "requires",
+@@ -685,8 +686,8 @@
+         for tag in tag2prco.keys():
+             name = self.hdr[getattr(rpm, 'RPMTAG_%sNAME' % tag)]
+ 
+-            lst = self.hdr[getattr(rpm, 'RPMTAG_%sFLAGS' % tag)]
+-            flag = map(rpmUtils.miscutils.flagToString, lst)
++            flg = self.hdr[getattr(rpm, 'RPMTAG_%sFLAGS' % tag)]
++            flag = map(rpmUtils.miscutils.flagToString, flg)
+ 
+             lst = self.hdr[getattr(rpm, 'RPMTAG_%sVERSION' % tag)]
+             vers = map(rpmUtils.miscutils.stringToVersion, lst)
+@@ -694,6 +695,15 @@
+             prcotype = tag2prco[tag]
+             if name is not None:
+                 self.prco[prcotype] = zip(name, flag, vers)
++                if prcotype in ('requires', 'provides'):
++                    for dep in self.prco[prcotype]:
++                        if type(dep[1]) is tuple and dep[1][0] == 'OPTIONAL':
++                            self.prco[prcotype].remove(dep)
++                            dep = (dep[0], dep[1][1], dep[2])
++                            if prcotype == 'requires':
++                                self.prco['suggests'].append(dep)
++                            else:
++                                self.prco['enhances'].append(dep)
+     
+     def tagByName(self, tag):
+         warnings.warn("tagByName() will go away in a furture version of Yum.\n",
+diff -ur yum-3.2.0/yum/rpmsack.py yum-3.2.0-new/yum/rpmsack.py
+--- yum-3.2.0/yum/rpmsack.py	2007-04-27 15:16:12.000000000 +0200
++++ yum-3.2.0-new/yum/rpmsack.py	2007-05-26 21:06:18.908476022 +0200
+@@ -41,7 +41,13 @@
+                            rpm.RPMTAG_CONFLICTFLAGS),
+             'obsoletes' : (rpm.RPMTAG_OBSOLETENAME,
+                            rpm.RPMTAG_OBSOLETEVERSION,
+-                           rpm.RPMTAG_OBSOLETEFLAGS)
++                           rpm.RPMTAG_OBSOLETEFLAGS),
++            'enhances'  : (rpm.RPMTAG_ENHANCESNAME,
++                           rpm.RPMTAG_ENHANCESVERSION,
++                           rpm.RPMTAG_ENHANCESFLAGS),
++            'suggests'  : (rpm.RPMTAG_SUGGESTSNAME,
++                           rpm.RPMTAG_SUGGESTSVERSION,
++                           rpm.RPMTAG_SUGGESTSFLAGS)
+             }
+ 
+     def __init__(self, root='/'):
+diff -ur yum-3.2.0/yum/sqlitesack.py yum-3.2.0-new/yum/sqlitesack.py
+--- yum-3.2.0/yum/sqlitesack.py	2007-04-25 20:55:36.000000000 +0200
++++ yum-3.2.0-new/yum/sqlitesack.py	2007-05-26 21:06:18.951806377 +0200
+@@ -38,7 +38,9 @@
+         self.prco = { 'obsoletes': (),
+                       'conflicts': (),
+                       'requires': (),
+-                      'provides': () }
++                      'provides': (),
++                      'suggests': (),
++                      'enhances': () }
+         self._files = {}
+         self.sack = repo.sack
+         self.repoid = repo.id
+@@ -189,9 +191,30 @@
+             executeSQL(cur, query)
+             self.prco[prcotype] = [ ]
+             for ob in cur:
+-                self.prco[prcotype].append((ob['name'], ob['flags'],
+-                                           (ob['epoch'], ob['version'], 
+-                                            ob['release'])))
++                fl = ob['flags']
++                if fl:
++                    fl = fl.split(',')
++                    if 'MISSINGOK' in fl:
++                        fl.remove('MISSINGOK')
++                        flags = ','.join(fl)
++                        if not flags:
++                            flags = None
++                        if prcotype == 'requires':
++                            self.prco['suggests'].append((ob['name'], flags,
++                                                         (ob['epoch'], ob['version'], 
++                                                          ob['release'])))
++                        elif prcotype == 'provides':
++                            self.prco['enhances'].append((ob['name'], flags,
++                                                         (ob['epoch'], ob['version'], 
++                                                          ob['release'])))
++                    else:
++                        self.prco[prcotype].append((ob['name'], ob['flags'],
++                                                   (ob['epoch'], ob['version'], 
++                                                    ob['release'])))
++                else:
++                    self.prco[prcotype].append((ob['name'], ob['flags'],
++                                               (ob['epoch'], ob['version'], 
++                                                ob['release'])))
+ 
+         return RpmBase.returnPrco(self, prcotype, printable)
+ 
