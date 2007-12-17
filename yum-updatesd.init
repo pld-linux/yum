@@ -39,11 +39,6 @@ stop() {
 	fi
 }
 
-restart() {
-	stop
-	start
-}
-
 condrestart() {
 	if [ -f /var/lock/subsys/yum-updatesd ]; then
 		stop
