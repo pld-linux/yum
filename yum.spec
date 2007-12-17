@@ -9,9 +9,8 @@ Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.
 # Source0-md5:	c5c09c8ff59ca9bc48ef9ae4ae205a78
 Source1:	%{name}-pld-source.repo
 Patch0:		%{name}-missingok.patch
-Patch1:		%{name}-amd64.patch
-Patch2:		%{name}-obsoletes.patch
-Patch3:		%{name}-chroot.patch
+Patch1:		%{name}-obsoletes.patch
+Patch2:		%{name}-chroot.patch
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-pythonprov
@@ -41,8 +40,6 @@ zapytaniu użytkownika w razie potrzeby.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 %build
 %{__make}
