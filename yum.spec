@@ -72,7 +72,8 @@ fi
 %doc README AUTHORS TODO INSTALL ChangeLog
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum.conf
 %dir %{_sysconfdir}/yum
-%{_sysconfdir}/yum/repos.d
+%dir %{_sysconfdir}/yum/repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/repos.d/*.repo
 %dir %{_sysconfdir}/yum/pluginconf.d
 %dir %{_sysconfdir}/dbus-1/system.d/yum-updatesd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-updatesd.conf
