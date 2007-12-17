@@ -9,6 +9,7 @@ Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.
 # Source0-md5:	25362cf7c9baeb557975be8ca2534555
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-updatesd.init
+Source3:	%{name}-updatesd.sysconfig
 Patch0:		%{name}-missingok.patch
 Patch1:		%{name}-obsoletes.patch
 Patch2:		%{name}-chroot.patch
@@ -62,13 +63,14 @@ notifications via mail, dbus or syslog.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc/{rc.d,yum/pluginconf.d},%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
+install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PYLIBDIR=%{py_sitescriptdir}/..
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld-source.repo
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/yum-updatesd
 
 %py_postclean
 
@@ -123,4 +125,5 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-updatesd.conf
 /etc/dbus-1/system.d/yum-updatesd.conf
 %attr(755,root,root) %{_sbindir}/yum-updatesd
+%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/yum-updatesd
 %attr(754,root,root) /etc/rc.d/init.d/yum-updatesd
