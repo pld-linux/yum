@@ -8,6 +8,7 @@ Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
 # Source0-md5:	25362cf7c9baeb557975be8ca2534555
 Source1:	%{name}-pld-source.repo
+Source2:	%{name}-updatesd.init
 Patch0:		%{name}-missingok.patch
 Patch1:		%{name}-obsoletes.patch
 Patch2:		%{name}-chroot.patch
@@ -52,6 +53,7 @@ install -d $RPM_BUILD_ROOT{/etc/{rc.d,yum/pluginconf.d},%{_libdir}/yum-plugins,%
 	DESTDIR=$RPM_BUILD_ROOT \
 	PYLIBDIR=%{py_sitescriptdir}/..
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld-source.repo
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
 
 %py_postclean
 
@@ -76,7 +78,7 @@ fi
 %dir %{_sysconfdir}/yum/repos.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/repos.d/*.repo
 %dir %{_sysconfdir}/yum/pluginconf.d
-%dir %{_sysconfdir}/dbus-1/system.d/yum-updatesd.conf
+%dir /etc/dbus-1/system.d/yum-updatesd.conf
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-updatesd.conf
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 %attr(755,root,root) %{_bindir}/yum
