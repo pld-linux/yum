@@ -10,13 +10,14 @@ Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.
 Source1:	%{name}-pld-source.repo
 Patch0:		%{name}-missingok.patch
 Patch1:		%{name}-amd64.patch
-Patch2:		%{name}-chroot.patch
+Patch2:		%{name}-obsoletes.patch
+Patch3:		%{name}-chroot.patch
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 Requires(post,preun):	/sbin/chkconfig
-Requires:	python >= 2.5
+Requires:	python
 Requires:	python-cElementTree
 Requires:	python-libxml2
 Requires:	python-rpm
@@ -42,6 +43,7 @@ zapytaniu użytkownika w razie potrzeby.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__make}
