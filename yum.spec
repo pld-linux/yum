@@ -22,7 +22,6 @@ Requires:	python-cElementTree
 Requires:	python-libxml2
 Requires:	python-rpm
 Requires:	python-sqlite
-Requires:	python-sqlite1
 Requires:	python-urlgrabber
 Requires:	rpm
 Requires:	yum-metadata-parser
