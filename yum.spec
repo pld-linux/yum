@@ -37,6 +37,7 @@ zapytaniu użytkownika w razie potrzeby.
 
 %package updatesd
 Summary:	RPM update notifier daemon
+Summary(pl.UTF-8):	Demon powiadamiający o uaktualnionych RPM-ach
 Group:		Networking/Daemons
 Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name} = %{version}-%{release}
@@ -47,6 +48,11 @@ Requires:	rc-scripts
 %description updatesd
 This is a daemon which periodically checks for updates and can send
 notifications via mail, dbus or syslog.
+
+%description updatesd -l pl.UTF-8
+Ten pakiet zawiera demona regularnie sprawdzającego dostępność
+uaktualnień, mogącego wysyłać uaktualnienia pocztą elektroniczną,
+poprzez dbus lub sysloga.
 
 %prep
 %setup -q
