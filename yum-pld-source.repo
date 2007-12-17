@@ -4,18 +4,26 @@
 [ac]
 name=PLD 2.0 Ac
 baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/PLD/$arch/PLD/RPMS/
+gpgkey=ftp://ftp.ac.pld-linux.org/dists/ac/PLD-2.0-Ac-GPG-key.asc
+gpgcheck=1
+enabled=1
 
 [ac-updates]
 name=PLD 2.0 Ac (updates)
 baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/updates/$arch/
+gpgkey=ftp://ftp.ac.pld-linux.org/dists/ac/PLD-2.0-Ac-GPG-key.asc
+gpgcheck=1
+enabled=1
 
 [ac-supported]
 name=PLD 2.0 Ac (supported)
 baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/supported/$arch/
+gpgkey=ftp://ftp.ac.pld-linux.org/dists/ac/PLD-2.0-Ac-GPG-key.asc
+gpgcheck=1
 enabled=0
 
 [ac-ready]
-name=PLD 2.0 Ac (test)
+name=PLD 2.0 Ac (ready)
 baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/ready/$arch/
 enabled=0
 
@@ -23,4 +31,3 @@ enabled=0
 name=PLD 2.0 Ac (test)
 baseurl=ftp://ftp.ac.pld-linux.org/dists/ac/test/$arch/
 enabled=0
-
