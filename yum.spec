@@ -72,6 +72,19 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pretrans
+# migrate to new dir. having two dirs is really confusing
+if [ -d %{_sysconfdir}/yum.repos.d ]; then
+	echo >&2 "Migrating %{_sysconfdir}/yum.repos.d to %{_sysconfdir}/yum/repos.d"
+	mkdir -p %{_sysconfdir}/yum/repos.d
+	for a in %{_sysconfdir}/yum.repos.d/*; do
+		if [ -f "$a" ]; then
+			mv -vf $a %{_sysconfdir}/yum/repos.d/${a##*/}
+		fi
+	done
+	rm -rf %{_sysconfdir}/yum.repos.d
+fi
+
 %post updatesd
 /sbin/chkconfig --add yum-updatesd
 %service yum-updatesd restart
