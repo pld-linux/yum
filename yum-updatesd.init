@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # yum           This shell script enables the yum-updates daemon
 #
@@ -16,21 +16,27 @@
 # source function library
 . /etc/rc.d/init.d/functions
 
-RETVAL=0
-
 start() {
-	echo -n $"Starting yum-updatesd: "
-	daemon +19 yum-updatesd
-	RETVAL=$?
-	echo
-	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/yum-updatesd
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/yum-updatesd ]; then
+		msg_starting yum-updatesd
+		daemon +19 /usr/sbin/yum-updatesd
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/yum-updatesd
+	else
+		msg_already_running yum-updatesd
+	fi
 }
 
 stop() {
-	echo -n $"Stopping yum-updatesd: "
-	killproc yum-updatesd
-	echo
-	[ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/yum-updatesd
+	if [ -f /var/lock/subsys/yum-updatesd ]; then
+		# Stop daemons.
+		msg_stopping yum-updatesd
+		killproc yum-updatesd
+		rm -f /var/lock/subsys/yum-updatesd
+	else
+		msg_not_running yum-updatesd
+	fi
 }
 
 restart() {
@@ -38,6 +44,8 @@ restart() {
 	start
 }
 
+RETVAL=0
+# See how we were called.
 case "$1" in
   start)
 	start
@@ -56,8 +64,8 @@ case "$1" in
 	RETVAL=$?
 	;;
   *)
-	echo $"Usage: $0 {start|stop|status|restart|reload|force-reload|condrestart}"
-	exit 1
+	msg_usage "$0 {start|stop|status|restart|reload|force-reload|condrestart}"
+	exit 3
 esac
 
 exit $RETVAL
