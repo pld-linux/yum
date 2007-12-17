@@ -1,19 +1,22 @@
 # $Id$
-# PLD <http://www.pld-linux.org/>
+# PLD Linux <http://www.pld-linux.org/>
 
 [th-arch]
 name=PLD 3.0 Th - Architecture specific
 baseurl=ftp://ftp.th.pld-linux.org/dists/th/PLD/$arch/RPMS/
+enabled=0
 
 [th-noarch]
 name=PLD 3.0 Th - Architecture independent
 baseurl=ftp://ftp.th.pld-linux.org/dists/th/PLD/noarch/RPMS/
+enabled=0
 
 [th-test-arch]
 name=PLD 3.0 Th (test) - Architecture specific
 baseurl=ftp://ftp.th.pld-linux.org/dists/th/test/$arch/RPMS/
+enabled=0
 
 [th-test-noarch]
 name=PLD 3.0 Th (test) - Architecture independent
 baseurl=ftp://ftp.th.pld-linux.org/dists/th/test/noarch/RPMS/
-
+enabled=0
