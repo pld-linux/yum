@@ -16,11 +16,14 @@
 # source function library
 . /etc/rc.d/init.d/functions
 
+# Get service config - may override defaults
+[ -f /etc/sysconfig/yum-updatesd ] && . /etc/sysconfig/yum-updatesd
+
 start() {
 	# Check if the service is already running?
 	if [ ! -f /var/lock/subsys/yum-updatesd ]; then
 		msg_starting yum-updatesd
-		daemon +19 /usr/sbin/yum-updatesd
+		daemon /usr/sbin/yum-updatesd
 		RETVAL=$?
 		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/yum-updatesd
 	else
