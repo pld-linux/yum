@@ -18,7 +18,7 @@ diff -ur yum-3.2.0/rpmUtils/miscutils.py yum-3.2.0-new/rpmUtils/miscutils.py
      return s
      
  def flagToString(flags):
-+    if flags & (1 << 19): return ('OPTIONAL', flagToString(flags & 0xf))
++    if flags & (1 << 19): return ('MISSINGOK', flagToString(flags & 0xf))
 +
      flags = flags & 0xf
  
@@ -60,7 +60,7 @@ diff -ur yum-3.2.0/yum/packages.py yum-3.2.0-new/yum/packages.py
                  self.prco[prcotype] = zip(name, flag, vers)
 +                if prcotype in ('requires', 'provides'):
 +                    for dep in self.prco[prcotype]:
-+                        if type(dep[1]) is tuple and dep[1][0] == 'OPTIONAL':
++                        if type(dep[1]) is tuple and dep[1][0] == 'MISSINGOK':
 +                            self.prco[prcotype].remove(dep)
 +                            dep = (dep[0], dep[1][1], dep[2])
 +                            if prcotype == 'requires':
