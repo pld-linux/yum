@@ -38,10 +38,10 @@ diff -ur yum-3.2.0/yum/sqlitesack.py yum-3.2.0-new/yum/sqlitesack.py
 +                    fl = fl.split(',')
 +                    if 'MISSINGOK' in fl:
 +                        fl.remove('MISSINGOK')
-+                        flags = ','.join(fl)
-+                        if not flags:
-+                            flags = None
-+                prco_set = (ob['name'], flags, 
++                        fl = ','.join(fl)
++                        if not fl:
++                            fl = None
++                prco_set = (ob['name'], fl, 
                              (ob['epoch'], ob['version'], ob['release']))
                  # This saves memory by merging the prco data from multiple
                  # packages. Note that flags etc. need to be the same too.
