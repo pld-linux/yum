@@ -18,8 +18,8 @@ BuildRequires:	gettext-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 Requires:	python >= 1:2.5
-Requires:	python-pyme
 Requires:	python-libxml2
+Requires:	python-pygpgme
 Requires:	python-rpm
 Requires:	python-sqlite
 Requires:	python-urlgrabber
