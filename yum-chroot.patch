@@ -148,11 +148,11 @@
          else:
              root = '/'
 @@ -1231,7 +1232,7 @@ class YumOptionParser(OptionParser):
-                 help="be tolerant of errors")
+                 help=_("be tolerant of errors"))
          self.add_option("-C", dest="cacheonly", action="store_true",
-                 help="run entirely from cache, don't update cache")
+                 help=_("run entirely from cache, don't update cache"))
 -        self.add_option("-c", dest="conffile", default='/etc/yum/yum.conf',
 +        self.add_option("-c", dest="conffile", default=None,
-                 help="config file location", metavar=' [config file]')
+                 help=_("config file location"), metavar=' [config file]')
          self.add_option("-R", dest="sleeptime", type='int', default=None,
-                 help="maximum command wait time", metavar=' [minutes]')
+                 help=_("maximum command wait time"), metavar=' [minutes]')
