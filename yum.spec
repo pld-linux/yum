@@ -2,7 +2,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.12
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
@@ -12,6 +12,7 @@ Source2:	%{name}-updatesd.init
 Source3:	%{name}-updatesd.sysconfig
 Patch0:		%{name}-missingok.patch
 Patch1:		%{name}-obsoletes.patch
+# from util-vserver-*/contrib/
 Patch2:		%{name}-chroot.patch
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
@@ -60,7 +61,7 @@ poprzez dbus lub sysloga.
 %setup -q
 #%patch0 -p1
 %patch1 -p1
-#%patch2 -p1
+%patch2 -p1
 
 %build
 %{__make}
