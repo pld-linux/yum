@@ -147,7 +147,7 @@
              root=opts.installroot
          else:
              root = '/'
-@@ -1231,7 +1232,7 @@ class YumOptionParser(OptionParser):
+@@ -1081,7 +1081,7 @@
                  help=_("be tolerant of errors"))
          self.add_option("-C", dest="cacheonly", action="store_true",
                  help=_("run entirely from cache, don't update cache"))
