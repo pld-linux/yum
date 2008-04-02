@@ -2,7 +2,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.12
-Release:	2
+Release:	3
 License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
@@ -73,7 +73,7 @@ install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PYLIBDIR=%{py_sitescriptdir}/..
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld-source.repo
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/yum-updatesd
 
@@ -105,6 +105,12 @@ fi
 if [ "$1" = "0" ]; then
 	/sbin/chkconfig --del yum-updatesd
 	%service -q yum-updatesd stop
+fi
+
+%triggerpostun -- %{name} < 3.2.12-3
+if [ -f %{_sysconfdir}/yum/repos.d/pld-source.repo.rpmsave ]; then
+	cp -f %{_sysconfdir}/yum/repos.d/pld.repo{,.rpmnew}
+	mv -f %{_sysconfdir}/yum/repos.d/{pld-source.repo.rpmsave,pld.repo}
 fi
 
 %files -f %{name}.lang
