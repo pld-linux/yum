@@ -1,17 +1,18 @@
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.2.8
+Version:	3.2.12
 Release:	3
 License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
-# Source0-md5:	25362cf7c9baeb557975be8ca2534555
+# Source0-md5:	9a54cb93a0fa78f456ad4b09f1aea28b
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-updatesd.init
 Source3:	%{name}-updatesd.sysconfig
 Patch0:		%{name}-missingok.patch
 Patch1:		%{name}-obsoletes.patch
+# from util-vserver-*/contrib/
 Patch2:		%{name}-chroot.patch
 Patch3:		%{name}-amd64.patch
 URL:		http://linux.duke.edu/projects/yum/
@@ -21,6 +22,7 @@ BuildRequires:	rpmbuild(macros) >= 1.228
 Requires:	python
 Requires:	python-cElementTree
 Requires:	python-libxml2
+Requires:	python-pygpgme
 Requires:	python-rpm
 Requires:	python-sqlite
 Requires:	python-urlgrabber
@@ -59,7 +61,7 @@ poprzez dbus lub sysloga.
 
 %prep
 %setup -q
-%patch0 -p1
+#%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -79,6 +81,8 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/yum-updatesd
 
 %py_postclean
+
+%find_lang %{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -106,13 +110,13 @@ if [ "$1" = "0" ]; then
 	%service -q yum-updatesd stop
 fi
 
-%triggerpostun -- %{name} < 3.2.8-2.1
+%triggerpostun -- %{name} < 3.2.12-3
 if [ -f %{_sysconfdir}/yum/repos.d/pld-source.repo.rpmsave ]; then
 	cp -f %{_sysconfdir}/yum/repos.d/pld.repo{,.rpmnew}
 	mv -f %{_sysconfdir}/yum/repos.d/{pld-source.repo.rpmsave,pld.repo}
 fi
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc README AUTHORS TODO INSTALL ChangeLog
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum.conf
