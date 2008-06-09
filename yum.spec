@@ -16,6 +16,7 @@ Patch1:		%{name}-obsoletes.patch
 Patch2:		%{name}-chroot.patch
 URL:		http://linux.duke.edu/projects/yum/
 BuildRequires:	gettext-devel
+BuildRequires:	intltool
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 Requires:	python >= 1:2.5
