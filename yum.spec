@@ -78,7 +78,7 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/yum-updatesd
 
-#%%py_postclean
+%py_postclean
 
 %find_lang %{name}
 
@@ -129,7 +129,7 @@ fi
 %dir %{py_sitescriptdir}/rpmUtils
 %{_libdir}/yum-plugins
 %{_datadir}/yum-plugins
-%{py_sitescriptdir}/*/*.py*
+%{py_sitescriptdir}/*/*.py[co]
 %{_datadir}/yum-cli
 /var/cache/yum
 %{_mandir}/man*/*
