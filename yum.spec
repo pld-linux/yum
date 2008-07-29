@@ -1,12 +1,12 @@
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.2.16
+Version:	3.2.17
 Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
-# Source0-md5:	7a205a108ffeb8cd299c817051968c04
+# Source0-md5:	e65c04204f974d4ecc071b823b75d50c
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-updatesd.init
 Source3:	%{name}-updatesd.sysconfig
@@ -78,7 +78,7 @@ install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
 install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/yum-updatesd
 
-%py_postclean
+#%%py_postclean
 
 %find_lang %{name}
 
@@ -129,7 +129,7 @@ fi
 %dir %{py_sitescriptdir}/rpmUtils
 %{_libdir}/yum-plugins
 %{_datadir}/yum-plugins
-%{py_sitescriptdir}/*/*.py[co]
+%{py_sitescriptdir}/*/*.py*
 %{_datadir}/yum-cli
 /var/cache/yum
 %{_mandir}/man*/*
