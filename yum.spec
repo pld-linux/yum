@@ -2,7 +2,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.17
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
@@ -20,6 +20,7 @@ BuildRequires:	intltool
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 Requires:	python >= 1:2.5
+Requires:	python-iniparse
 Requires:	python-libxml2
 Requires:	python-pygpgme
 Requires:	python-rpm
