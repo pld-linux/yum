@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# yum           This shell script enables the yum-updates daemon
+#
+# Author:       Jeremy Katz <katzj@redhat.com>
+#
+# chkconfig:	345 97 03
+#
+# description:  This is a daemon which periodically checks for updates \
+#               and can send notifications via mail, dbus or syslog.
+# processname:  yum-updatesd
+# config: /etc/yum/yum-updatesd.conf
+# pidfile: /var/run/yum-updatesd.pid
+#
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+# Get service config - may override defaults
+[ -f /etc/sysconfig/yum-updatesd ] && . /etc/sysconfig/yum-updatesd
+
+start() {
+	# Check if the service is already running?
+	if [ ! -f /var/lock/subsys/yum-updatesd ]; then
+		msg_starting yum-updatesd
+		daemon /usr/sbin/yum-updatesd
+		RETVAL=$?
+		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/yum-updatesd
+	else
+		msg_already_running yum-updatesd
+	fi
+}
+
+stop() {
+	if [ -f /var/lock/subsys/yum-updatesd ]; then
+		# Stop daemons.
+		msg_stopping yum-updatesd
+		killproc yum-updatesd
+		rm -f /var/lock/subsys/yum-updatesd
+	else
+		msg_not_running yum-updatesd
+	fi
+}
+
+condrestart() {
+	if [ -f /var/lock/subsys/yum-updatesd ]; then
+		stop
+		start
+	else
+		msg_not_running yum-updatesd
+		RETVAL=$1
+	fi
+}
+
+RETVAL=0
+# See how we were called.
+case "$1" in
+  start)
+	start
+	;;
+  stop) 
+	stop
+	;;
+  restart)
+	stop
+	start
+	;;
+  try-restart)
+	condrestart 0
+	;;
+  force-reload)
+	condrestart 7
+	;;
+  status)
+	status yum-updatesd
+	RETVAL=$?
+	;;
+  *)
+	msg_usage "$0 {start|stop|restart|try-restart|force-reload|status}"
+	exit 3
+esac
+
+exit $RETVAL

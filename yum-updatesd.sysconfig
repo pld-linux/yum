@@ -1,0 +1,4 @@
+# Customized settings for yum-updates daemon
+
+# Define nice level
+SERVICE_RUN_NICE_LEVEL="+19"

@@ -1,0 +1,12 @@
+diff -urN yum-3.2.0/etc/yum.conf yum-3.2.0.new/etc/yum.conf
+--- yum-3.2.0/etc/yum.conf	2007-04-08 21:35:18.000000000 +0200
++++ yum-3.2.0.new/etc/yum.conf	2007-06-05 17:22:29.991578139 +0200
+@@ -4,7 +4,7 @@
+ debuglevel=2
+ logfile=/var/log/yum.log
+ exactarch=1
+-obsoletes=1
++obsoletes=0
+ 
+ 
+ # PUT YOUR REPOS HERE OR IN separate files named file.repo
