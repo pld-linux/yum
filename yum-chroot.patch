@@ -10,22 +10,30 @@
  
              if os.path.isdir(reposdir):
                  for repofn in glob.glob('%s/*.repo' % reposdir):
-@@ -664,11 +663,9 @@ class YumBase(depsolve.Depsolve):
-         # if we're not root then we don't lock - just return nicely
+@@ -664,8 +663,7 @@ class YumBase(depsolve.Depsolve):
          if self.conf.uid != 0:
              return
--            
+             
 -        root = self.conf.installroot
 -        lockfile = root + '/' + lockfile # lock in the chroot
--        lockfile = os.path.normpath(lockfile) # get rid of silly preceding extra /
--        
-+
 +        lockfile = self.conf.lockfile
-+
+         lockfile = os.path.normpath(lockfile) # get rid of silly preceding extra /
+         
          mypid=str(os.getpid())    
-         while not self._lock(lockfile, mypid, 0644):
-             fd = open(lockfile, 'r')
-@@ -700,9 +697,8 @@ class YumBase(depsolve.Depsolve):
+@@ -700,8 +697,7 @@ class YumBase(depsolve.Depsolve):
+             return
+         
+         if lockfile is not None:
+-            root = self.conf.installroot
+-            lockfile = root + '/' + lockfile # lock in the chroot
++            lockfile = self.conf.lockfile
+         elif self._lockfile is None:
+             return # Don't delete other people's lock files on __del__
+         else:
+
+
+
+
          if self.conf.uid != 0:
              return
          
