@@ -10,30 +10,22 @@
  
              if os.path.isdir(reposdir):
                  for repofn in glob.glob('%s/*.repo' % reposdir):
-@@ -664,8 +663,7 @@ class YumBase(depsolve.Depsolve):
+@@ -664,11 +663,9 @@ class YumBase(depsolve.Depsolve):
+         # if we're not root then we don't lock - just return nicely
          if self.conf.uid != 0:
              return
-             
+-            
 -        root = self.conf.installroot
 -        lockfile = root + '/' + lockfile # lock in the chroot
+-        lockfile = os.path.normpath(lockfile) # get rid of silly preceding extra /
+-        
++
 +        lockfile = self.conf.lockfile
-         lockfile = os.path.normpath(lockfile) # get rid of silly preceding extra /
-         
++
          mypid=str(os.getpid())    
-@@ -700,8 +697,7 @@ class YumBase(depsolve.Depsolve):
-             return
-         
-         if lockfile is not None:
--            root = self.conf.installroot
--            lockfile = root + '/' + lockfile # lock in the chroot
-+            lockfile = self.conf.lockfile
-         elif self._lockfile is None:
-             return # Don't delete other people's lock files on __del__
-         else:
-
-
-
-
+         while not self._lock(lockfile, mypid, 0644):
+             fd = open(lockfile, 'r')
+@@ -700,9 +697,8 @@ class YumBase(depsolve.Depsolve):
          if self.conf.uid != 0:
              return
          
@@ -155,12 +147,12 @@
              root=opts.installroot
          else:
              root = '/'
-@@ -1081,7 +1081,7 @@
-                 help=_("be tolerant of errors"))
+@@ -1231,7 +1232,7 @@ class YumOptionParser(OptionParser):
+                 help="be tolerant of errors")
          self.add_option("-C", dest="cacheonly", action="store_true",
-                 help=_("run entirely from cache, don't update cache"))
+                 help="run entirely from cache, don't update cache")
 -        self.add_option("-c", dest="conffile", default='/etc/yum/yum.conf',
 +        self.add_option("-c", dest="conffile", default=None,
-                 help=_("config file location"), metavar=' [config file]')
+                 help="config file location", metavar=' [config file]')
          self.add_option("-R", dest="sleeptime", type='int', default=None,
-                 help=_("maximum command wait time"), metavar=' [minutes]')
+                 help="maximum command wait time", metavar=' [minutes]')
