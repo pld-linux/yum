@@ -1,12 +1,12 @@
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.2.19
+Version:	3.2.20
 Release:	2
 License:	GPL
 Group:		Applications/System
-Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
-# Source0-md5:	a859fbec9d82578450f6f24d49dbe71b
+Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
+# Source0-md5:	1e38412df913b67c306bc4dc2e7c20dd
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-updatesd.init
 Source3:	%{name}-updatesd.sysconfig
@@ -14,7 +14,7 @@ Patch0:		%{name}-missingok.patch
 Patch1:		%{name}-obsoletes.patch
 # from util-vserver-*/contrib/
 Patch2:		%{name}-chroot.patch
-URL:		http://linux.duke.edu/projects/yum/
+URL:		http://yum.baseurl.org/
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
 BuildRequires:	rpm-pythonprov
