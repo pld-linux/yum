@@ -1,12 +1,12 @@
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.2.14
+Version:	3.2.20
 Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://linux.duke.edu/projects/yum/download/3.2/%{name}-%{version}.tar.gz
-# Source0-md5:	3ef5002fffe7919889c4187791e86a7d
+Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
+# Source0-md5:	1e38412df913b67c306bc4dc2e7c20dd
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-updatesd.init
 Source3:	%{name}-updatesd.sysconfig
@@ -15,8 +15,9 @@ Patch1:		%{name}-obsoletes.patch
 # from util-vserver-*/contrib/
 Patch2:		%{name}-chroot.patch
 Patch3:		%{name}-amd64.patch
-URL:		http://linux.duke.edu/projects/yum/
+URL:		http://yum.baseurl.org/
 BuildRequires:	gettext-devel
+BuildRequires:	intltool
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 Requires:	python
@@ -29,6 +30,9 @@ Requires:	python-urlgrabber
 Requires:	rpm
 Requires:	yum-metadata-parser
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+# no arch dependant binary payloads
+%define		_enable_debug_packages	0
 
 %description
 Yum is a utility that can check for and automatically download and
