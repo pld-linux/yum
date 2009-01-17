@@ -1,16 +1,15 @@
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.2.20
-Release:	3
+Version:	3.2.21
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
-# Source0-md5:	1e38412df913b67c306bc4dc2e7c20dd
+# Source0-md5:	2c9ff2e3c329e5cd0ce335d05bf96b7b
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-updatesd.init
 Source3:	%{name}-updatesd.sysconfig
-Patch0:		%{name}-missingok.patch
 Patch1:		%{name}-obsoletes.patch
 # from util-vserver-*/contrib/
 Patch2:		%{name}-chroot.patch
@@ -61,7 +60,6 @@ poprzez dbus lub sysloga.
 
 %prep
 %setup -q
-#%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 
