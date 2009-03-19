@@ -1,0 +1,33 @@
+# PLD Titanium
+# Unofficial version of PLD Linux Distribution
+# http://www.pld-linux.org/Titanium
+
+[titanium-arch]
+name=PLD Linux Titanium - Architecture specific
+baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/PLD/$arch/RPMS/
+enabled=1
+
+[titanium-noarch]
+name=PLD Linux Titanium - Architecture independent
+baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/PLD/noarch/RPMS/
+enabled=1
+
+[titanium-ready-arch]
+name=PLD Linux Titanium (ready) - Architecture specific
+baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/ready/$arch/RPMS/
+enabled=0
+
+[titanium-ready-noarch]
+name=PLD Linux Titanium (ready) - Architecture independent
+baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/ready/noarch/RPMS/
+enabled=0
+
+[titanium-test-arch]
+name=PLD Linux Titanium (test) - Architecture specific
+baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/test/$arch/RPMS/
+enabled=0
+
+[titanium-test-noarch]
+name=PLD Linux Titanium (test) - Architecture independent
+baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/test/noarch/RPMS/
+enabled=0
