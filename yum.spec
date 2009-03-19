@@ -8,8 +8,9 @@ Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
 # Source0-md5:	2c9ff2e3c329e5cd0ce335d05bf96b7b
 Source1:	%{name}-pld-source.repo
-Source2:	%{name}-updatesd.init
-Source3:	%{name}-updatesd.sysconfig
+Source2:	%{name}-pld-ti-source.repo
+Source3:	%{name}-updatesd.init
+Source4:	%{name}-updatesd.sysconfig
 Patch1:		%{name}-obsoletes.patch
 # from util-vserver-*/contrib/
 Patch2:		%{name}-chroot.patch
@@ -73,9 +74,14 @@ install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PYLIBDIR=%{py_sitescriptdir}/..
+
+%if "%{pld_release}" == "ti"
+install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
+%else
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/sysconfig/yum-updatesd
+%endif
+install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
+install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/yum-updatesd
 
 %py_postclean
 
