@@ -4,7 +4,7 @@
 
 [titanium-arch]
 name=PLD Linux Titanium - Architecture specific
-baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/PLD/$arch/RPMS/
+baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/PLD/%ARCH%/RPMS/
 enabled=1
 
 [titanium-noarch]
@@ -14,7 +14,7 @@ enabled=1
 
 [titanium-ready-arch]
 name=PLD Linux Titanium (ready) - Architecture specific
-baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/ready/$arch/RPMS/
+baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/ready/%ARCH%/RPMS/
 enabled=0
 
 [titanium-ready-noarch]
@@ -24,7 +24,7 @@ enabled=0
 
 [titanium-test-arch]
 name=PLD Linux Titanium (test) - Architecture specific
-baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/test/$arch/RPMS/
+baseurl=ftp://ftp.titanium.pld-linux.org/branches/titanium/test/%ARCH%/RPMS/
 enabled=0
 
 [titanium-test-noarch]
