@@ -75,8 +75,30 @@ install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum
 	DESTDIR=$RPM_BUILD_ROOT \
 	PYLIBDIR=%{py_sitescriptdir}/..
 
+%ifarch i486 i686 ppc sparc alpha athlon
+%define		_ftp_arch	%{_target_cpu}
+%endif
+%ifarch %{x8664}
+%define		_ftp_arch	x86_64
+%endif
+%ifarch i586
 %if "%{pld_release}" == "ti"
-install %{SOURCE2} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
+%define		_ftp_arch	i586
+%else
+%define		_ftp_arch	i486
+%endif
+%endif
+%ifarch pentium2 pentium3 pentium4
+%define		_ftp_arch	i686
+%endif
+%ifarch sparcv9 sparc64
+%define		_ftp_arch	sparc
+%endif
+
+%if "%{pld_release}" == "ti"
+sed -e '
+    s|%%ARCH%%|%{_ftp_arch}|g
+    ' < %{SOURCE2} > $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
 %else
 install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
 %endif
