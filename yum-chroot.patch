@@ -1,15 +1,15 @@
 --- yum-3.2.4/yum/__init__.py.chroot
 +++ yum-3.2.4/yum/__init__.py
 @@ -214,8 +214,7 @@ class YumBase(depsolve.Depsolve):
-         repo_config_age = self.conf.config_file_age
-         
-         for reposdir in self.conf.reposdir:
+             # this check makes sure that our dirs exist properly.
+             # if they aren't in the installroot then don't prepent the installroot path
+             # if we don't do this then anaconda likes to not  work.
 -            if os.path.exists(self.conf.installroot+'/'+reposdir):
 -                reposdir = self.conf.installroot + '/' + reposdir
 +            reposdir  = self.conf.getRootedPath(reposdir)
  
              if os.path.isdir(reposdir):
-                 for repofn in glob.glob('%s/*.repo' % reposdir):
+                 for repofn in sorted(glob.glob('%s/*.repo' % reposdir)):
 @@ -664,8 +663,7 @@ class YumBase(depsolve.Depsolve):
          if self.conf.uid != 0:
              return
