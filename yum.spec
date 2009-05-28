@@ -1,12 +1,12 @@
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.2.22
+Version:	3.2.23
 Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
-# Source0-md5:	09581995474a5de63983283b8b0e02ef
+# Source0-md5:	9bb6a69dbb1a5a4cb4d5dd8036cffac4
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-pld-ti-source.repo
 Source3:	%{name}-updatesd.init
