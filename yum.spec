@@ -2,7 +2,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.23
-Release:	2
+Release:	3
 License:	GPL
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
@@ -14,6 +14,7 @@ Source4:	%{name}-updatesd.sysconfig
 Patch1:		%{name}-obsoletes.patch
 # from util-vserver-*/contrib/
 Patch2:		%{name}-chroot.patch
+Patch3:		%{name}-pld.patch
 URL:		http://yum.baseurl.org/
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
@@ -63,6 +64,7 @@ poprzez dbus lub sysloga.
 %setup -q
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__make}
