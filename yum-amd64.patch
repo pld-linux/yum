@@ -1,0 +1,11 @@
+--- yum-3.2.0/rpmUtils/arch.py~	2007-04-27 15:58:04.000000000 +0300
++++ yum-3.2.0/rpmUtils/arch.py	2007-05-31 14:00:56.920945155 +0300
+@@ -242,6 +242,8 @@
+             pass
+         
+     arch = os.uname()[4]
++    if arch == "x86_64":
++        arch = "amd64"
+ 
+     if (len(arch) == 4 and arch[0] == "i" and arch[2:4] == "86"):
+         return getCanonX86Arch(arch)
