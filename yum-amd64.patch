@@ -1,11 +1,39 @@
---- yum-3.2.0/rpmUtils/arch.py~	2007-04-27 15:58:04.000000000 +0300
-+++ yum-3.2.0/rpmUtils/arch.py	2007-05-31 14:00:56.920945155 +0300
-@@ -242,6 +242,8 @@
-             pass
-         
-     arch = os.uname()[4]
-+    if arch == "x86_64":
-+        arch = "amd64"
+--- yum-3.2.25/rpmUtils/arch.py~	2009-09-15 23:58:51.000000000 +0300
++++ yum-3.2.25/rpmUtils/arch.py	2009-11-18 14:02:08.718489471 +0200
+@@ -280,27 +280,6 @@
+         return "sparcv8"
+     return arch
  
-     if (len(arch) == 4 and arch[0] == "i" and arch[2:4] == "86"):
-         return getCanonX86Arch(arch)
+-def getCanonX86_64Arch(arch):
+-    if arch != "x86_64":
+-        return arch
+-
+-    vendor = None
+-    f = open("/proc/cpuinfo", "r")
+-    lines = f.readlines()
+-    f.close()
+-    for line in lines:
+-        if line.startswith("vendor_id"):
+-            vendor = line.split(':')[1]
+-            break
+-    if vendor is None:
+-        return arch
+-
+-    if vendor.find("Authentic AMD") != -1 or vendor.find("AuthenticAMD") != -1:
+-        return "amd64"
+-    if vendor.find("GenuineIntel") != -1:
+-        return "ia32e"
+-    return arch
+-        
+ def getCanonArch(skipRpmPlatform = 0):
+     if not skipRpmPlatform and os.access("/etc/rpm/platform", os.R_OK):
+         try:
+@@ -321,8 +300,6 @@
+         return getCanonPPCArch(arch)
+     if arch.startswith("sparc"):
+         return getCanonSPARCArch(arch)
+-    if arch == "x86_64":
+-        return getCanonX86_64Arch(arch)
+ 
+     return arch
+ 
