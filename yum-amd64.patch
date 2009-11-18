@@ -1,6 +1,40 @@
---- yum-3.2.25/rpmUtils/arch.py~	2009-09-15 23:58:51.000000000 +0300
-+++ yum-3.2.25/rpmUtils/arch.py	2009-11-18 14:02:08.718489471 +0200
-@@ -280,27 +280,6 @@
+--- yum-3.2.25/rpmUtils/arch.py	2009-11-18 14:02:08.718489471 +0200
++++ yum-3.2.25/rpmUtils/arch.py	2009-11-18 14:09:16.755112524 +0200
+@@ -205,30 +205,10 @@
+         
+ 
+ def getCanonX86Arch(arch):
+-    # 
+     if arch == "i586":
+-        f = open("/proc/cpuinfo", "r")
+-        lines = f.readlines()
+-        f.close()
+-        for line in lines:
+-            if line.startswith("model name") and line.find("Geode(TM)") != -1:
+-                return "geode"
+-        return arch
+-    # only athlon vs i686 isn't handled with uname currently
+-    if arch != "i686":
+-        return arch
+-
+-    # if we're i686 and AuthenticAMD, then we should be an athlon
+-    f = open("/proc/cpuinfo", "r")
+-    lines = f.readlines()
+-    f.close()
+-    for line in lines:
+-        if line.startswith("vendor") and line.find("AuthenticAMD") != -1:
+-            return "athlon"
+-        # i686 doesn't guarantee cmov, but we depend on it
+-        elif line.startswith("flags") and line.find("cmov") == -1:
+-            return "i586"
+-
++        # nearest matching arch in Th is i486
++        return "i486"
++    # not sure what we have here
+     return arch
+ 
+ def getCanonPPCArch(arch):
+@@ -280,27 +260,6 @@
          return "sparcv8"
      return arch
  
@@ -28,7 +62,7 @@
  def getCanonArch(skipRpmPlatform = 0):
      if not skipRpmPlatform and os.access("/etc/rpm/platform", os.R_OK):
          try:
-@@ -321,8 +300,6 @@
+@@ -321,8 +280,6 @@
          return getCanonPPCArch(arch)
      if arch.startswith("sparc"):
          return getCanonSPARCArch(arch)
