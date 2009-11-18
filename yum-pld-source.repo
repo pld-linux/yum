@@ -2,21 +2,41 @@
 # PLD Linux <http://www.pld-linux.org/>
 
 [th-arch]
-name=PLD 3.0 Th - Architecture specific
+name=PLD Linux (Th) - Architecture specific
 baseurl=ftp://ftp.th.pld-linux.org/dists/th/PLD/$arch/RPMS/
-enabled=0
+enabled=1
 
 [th-noarch]
-name=PLD 3.0 Th - Architecture independent
+name=PLD Linux (Th) - Architecture independent
 baseurl=ftp://ftp.th.pld-linux.org/dists/th/PLD/noarch/RPMS/
+enabled=1
+
+[th-ready-arch]
+name=PLD Linux (Th) (ready) - Architecture specific
+baseurl=ftp://ftp.th.pld-linux.org/dists/th/ready/$arch/RPMS/
+enabled=0
+
+[th-ready-noarch]
+name=PLD Linux (Th) (ready) - Architecture independent
+baseurl=ftp://ftp.th.pld-linux.org/dists/th/ready/noarch/RPMS/
 enabled=0
 
 [th-test-arch]
-name=PLD 3.0 Th (test) - Architecture specific
+name=PLD Linux (Th) (test) - Architecture specific
 baseurl=ftp://ftp.th.pld-linux.org/dists/th/test/$arch/RPMS/
 enabled=0
 
 [th-test-noarch]
-name=PLD 3.0 Th (test) - Architecture independent
+name=PLD Linux (Th) (test) - Architecture independent
 baseurl=ftp://ftp.th.pld-linux.org/dists/th/test/noarch/RPMS/
+enabled=0
+
+[th-obsolete-arch]
+name=PLD Linux (Th) (obsolete) - Architecture specific
+baseurl=ftp://ftp.th.pld-linux.org/dists/th/obsolete/$arch/RPMS/
+enabled=0
+
+[th-obsolete-noarch]
+name=PLD Linux (Th) (obsolete) - Architecture independent
+baseurl=ftp://ftp.th.pld-linux.org/dists/th/obsolete/noarch/RPMS/
 enabled=0
