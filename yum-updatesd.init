@@ -2,54 +2,70 @@
 #
 # yum           This shell script enables the yum-updates daemon
 #
-# Author:       Jeremy Katz <katzj@redhat.com>
-#
 # chkconfig:	345 97 03
 #
 # description:  This is a daemon which periodically checks for updates \
 #               and can send notifications via mail, dbus or syslog.
+#
 # processname:  yum-updatesd
 # config: /etc/yum/yum-updatesd.conf
 # pidfile: /var/run/yum-updatesd.pid
 #
+# $Id$
 
 # source function library
 . /etc/rc.d/init.d/functions
 
+# Get network config
+. /etc/sysconfig/network
+
 # Get service config - may override defaults
 [ -f /etc/sysconfig/yum-updatesd ] && . /etc/sysconfig/yum-updatesd
 
+# Check that networking is up.
+if is_yes "${NETWORKING}"; then
+	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status ]; then
+		msg_network_down "Yum Updatesd"
+		exit 1
+	fi
+else
+	exit 0
+fi
+
 start() {
 	# Check if the service is already running?
-	if [ ! -f /var/lock/subsys/yum-updatesd ]; then
-		msg_starting yum-updatesd
-		daemon /usr/sbin/yum-updatesd
-		RETVAL=$?
-		[ $RETVAL -eq 0 ] && touch /var/lock/subsys/yum-updatesd
-	else
-		msg_already_running yum-updatesd
+	if [ -f /var/lock/subsys/yum-updatesd ]; then
+		msg_already_running "Yum Updatesd"
+		return
 	fi
+
+	msg_starting "Yum Updatesd"
+	daemon /usr/sbin/yum-updatesd
+	RETVAL=$?
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/yum-updatesd
 }
 
 stop() {
-	if [ -f /var/lock/subsys/yum-updatesd ]; then
-		# Stop daemons.
-		msg_stopping yum-updatesd
-		killproc yum-updatesd
-		rm -f /var/lock/subsys/yum-updatesd
-	else
-		msg_not_running yum-updatesd
+	if [ ! -f /var/lock/subsys/yum-updatesd ]; then
+		msg_not_running "Yum Updatesd"
+		return
 	fi
+
+	# Stop daemons.
+	msg_stopping "Yum Updatesd"
+	killproc yum-updatesd
+	rm -f /var/lock/subsys/yum-updatesd
 }
 
 condrestart() {
 	if [ -f /var/lock/subsys/yum-updatesd ]; then
-		stop
-		start
-	else
-		msg_not_running yum-updatesd
+		msg_not_running "Yum Updatesd"
 		RETVAL=$1
+		return
 	fi
+
+	stop
+	start
 }
 
 RETVAL=0
