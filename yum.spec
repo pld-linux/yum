@@ -1,12 +1,14 @@
+# TODO
+# - PLDize (or drop) /etc/yum/version-groups.conf
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.2.23
-Release:	3
+Version:	3.2.25
+Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
-# Source0-md5:	9bb6a69dbb1a5a4cb4d5dd8036cffac4
+# Source0-md5:	7fdea025aa8fb88376a283959d5d2d0f
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-pld-ti-source.repo
 Source3:	%{name}-updatesd.init
@@ -15,6 +17,7 @@ Patch1:		%{name}-obsoletes.patch
 # from util-vserver-*/contrib/
 Patch2:		%{name}-chroot.patch
 Patch3:		%{name}-pld.patch
+Patch4:		%{name}-amd64.patch
 URL:		http://yum.baseurl.org/
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
@@ -65,6 +68,7 @@ poprzez dbus lub sysloga.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %{__make}
@@ -77,6 +81,7 @@ install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum
 	DESTDIR=$RPM_BUILD_ROOT \
 	PYLIBDIR=%{py_sitescriptdir}/..
 
+%if "%{pld_release}" == "ti"
 %ifarch i486 i686 ppc sparc alpha athlon
 %define		_ftp_arch	%{_target_cpu}
 %endif
@@ -84,11 +89,7 @@ install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum
 %define		_ftp_arch	x86_64
 %endif
 %ifarch i586
-%if "%{pld_release}" == "ti"
 %define		_ftp_arch	i586
-%else
-%define		_ftp_arch	i486
-%endif
 %endif
 %ifarch pentium2 pentium3 pentium4
 %define		_ftp_arch	i686
@@ -96,16 +97,14 @@ install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum
 %ifarch sparcv9 sparc64
 %define		_ftp_arch	sparc
 %endif
-
-%if "%{pld_release}" == "ti"
 sed -e '
     s|%%ARCH%%|%{_ftp_arch}|g
     ' < %{SOURCE2} > $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
 %else
-install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
+install -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
 %endif
-install %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
-install %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/yum-updatesd
+install -p %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
+install -p %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/yum-updatesd
 
 %py_postclean
 
@@ -147,6 +146,7 @@ fi
 %defattr(644,root,root,755)
 %doc README AUTHORS TODO INSTALL ChangeLog
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/version-groups.conf
 %dir %{_sysconfdir}/yum
 %dir %{_sysconfdir}/yum/repos.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/repos.d/*.repo

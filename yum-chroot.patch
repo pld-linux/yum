@@ -1,4 +1,3 @@
-diff -urN yum-3.2.23.orig/cli.py yum-3.2.23/cli.py
 --- yum-3.2.23.orig/cli.py	2009-05-14 18:41:21.000000000 +0200
 +++ yum-3.2.23/cli.py	2009-08-06 00:34:04.380934519 +0200
 @@ -1243,13 +1243,14 @@
@@ -31,13 +30,12 @@ diff -urN yum-3.2.23.orig/cli.py yum-3.2.23/cli.py
                  help=_("config file location"), metavar=' [config file]')
          group.add_option("-R", dest="sleeptime", type='int', default=None,
                  help=_("maximum command wait time"), metavar=' [minutes]')
-diff -urN yum-3.2.23.orig/docs/yum.conf.5 yum-3.2.23/docs/yum.conf.5
---- yum-3.2.23.orig/docs/yum.conf.5	2009-04-20 22:00:30.000000000 +0200
-+++ yum-3.2.23/docs/yum.conf.5	2009-08-06 00:33:12.628012450 +0200
-@@ -23,8 +23,10 @@
- following options:
+--- yum-3.2.25/docs/yum.conf.5~	2009-10-12 16:58:13.000000000 +0300
++++ yum-3.2.25/docs/yum.conf.5	2009-11-18 13:34:13.578656364 +0200
+@@ -24,8 +24,10 @@
  
- .IP \fBcachedir\fR
+ .IP
+ \fBcachedir\fR
 -Directory where yum should store its cache and db files. The default is
 -`/var/cache/yum'.
 +Directory where yum should store its cache and db files. The default
@@ -45,9 +43,9 @@ diff -urN yum-3.2.23.orig/docs/yum.conf.5 yum-3.2.23/docs/yum.conf.5
 +are used, some magic will be applied to determine the real path in
 +combination with `--installroot'.
  
- .IP \fBpersistdir\fR
- Directory where yum should store information that should persist over multiple
-@@ -44,6 +46,10 @@
+ .IP
+ \fBpersistdir\fR
+@@ -48,6 +50,10 @@
  repositories defined in /etc/yum/yum.conf to form the complete set of
  repositories that yum will use.
  
@@ -55,24 +53,23 @@ diff -urN yum-3.2.23.orig/docs/yum.conf.5 yum-3.2.23/docs/yum.conf.5
 +will be applied to determine the real path in combination with
 +`--installroot'.
 +
- .IP \fBdebuglevel\fR
+ .IP
+ \fBdebuglevel\fR
  Debug message output level. Practical range is 0\-10. Default is `2'.
+@@ -58,7 +64,10 @@
  
-@@ -51,7 +57,10 @@
- Error message output level. Practical range is 0\-10. Default is `2'.
- 
- .IP \fBlogfile\fR
+ .IP
+ \fBlogfile\fR
 -Full directory and file name for where yum should write its log file.
 +Full directory and file name for where yum should write its log
 +file. Unless the prefixes `hostfs://' or `chrootfs://' are used,
 +some magic will be applied to determine the real path in combination
 +with `--installroot'.
  
- .IP \fBgpgcheck\fR
- Either `1' or `0'. This tells yum whether or not it should perform a GPG
-diff -urN yum-3.2.23.orig/yum/config.py yum-3.2.23/yum/config.py
---- yum-3.2.23.orig/yum/config.py	2009-05-18 22:24:19.000000000 +0200
-+++ yum-3.2.23/yum/config.py	2009-08-06 00:37:29.804480348 +0200
+ .IP
+ \fBgpgcheck\fR
+--- yum-3.2.25/yum/config.py~	2009-11-18 13:34:24.000000000 +0200
++++ yum-3.2.25/yum/config.py	2009-11-18 13:34:59.641984903 +0200
 @@ -588,6 +588,26 @@
      syslog_ident = Option()
      syslog_facility = Option('LOG_DAEMON')
@@ -108,7 +105,7 @@ diff -urN yum-3.2.23.orig/yum/config.py yum-3.2.23/yum/config.py
      reposdir = ListOption(['/etc/yum/repos.d', '/etc/yum.repos.d'])
  
      commands = ListOption()
-@@ -798,12 +819,12 @@
+@@ -850,13 +850,13 @@
      yumconf.populate(startupconf._parser, 'main')
  
      # Apply the installroot to directory options
@@ -118,12 +115,12 @@ diff -urN yum-3.2.23.orig/yum/config.py yum-3.2.23/yum/config.py
          ir_path = yumconf.installroot + path
          ir_path = ir_path.replace('//', '/') # os.path.normpath won't fix this and
                                               # it annoys me
+         ir_path = varReplace(ir_path, yumvars)
 -        setattr(yumconf, option, ir_path)
 +        setattr(yumconf, option, yumconf.getRootedPath(path))
      
      # Add in some extra attributes which aren't actually configuration values 
      yumconf.yumvar = yumvars
-diff -urN yum-3.2.23.orig/yum/__init__.py yum-3.2.23/yum/__init__.py
 --- yum-3.2.23.orig/yum/__init__.py	2009-05-19 21:53:48.000000000 +0200
 +++ yum-3.2.23/yum/__init__.py	2009-08-06 00:36:19.980910237 +0200
 @@ -341,8 +341,7 @@
