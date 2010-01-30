@@ -4,7 +4,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.25
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
@@ -75,7 +75,7 @@ poprzez dbus lub sysloga.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
+install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d,yum.repos.d},%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -149,6 +149,7 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/version-groups.conf
 %dir %{_sysconfdir}/yum
 %dir %{_sysconfdir}/yum/repos.d
+%dir %{_sysconfdir}/yum.repos.d
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/repos.d/*.repo
 %dir %{_sysconfdir}/yum/pluginconf.d
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
