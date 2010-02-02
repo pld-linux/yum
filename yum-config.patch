@@ -1,0 +1,31 @@
+--- yum-3.2.25/etc/yum.conf~	2010-02-03 01:12:22.209166983 +0200
++++ yum-3.2.25/etc/yum.conf	2010-01-17 23:43:43.968036823 +0200
+@@ -1,11 +1,24 @@
+ [main]
+-cachedir=/var/cache/yum
+-keepcache=1
++cachedir=/var/cache/yum
++keepcache=0
+ debuglevel=2
+ logfile=/var/log/yum.log
+ exactarch=1
+-obsoletes=0
++obsoletes=0
++gpgcheck=0
++plugins=1
++installonly_limit=3
++color=never
+ 
++# This is the default, if you make this bigger yum won't see if the metadata
++# is newer on the remote and so you'll "gain" the bandwidth of not having to
++# download the new metadata and "pay" for it by yum not having correct
++# information.
++#  It is esp. important, to have correct metadata, for distributions like
++# Fedora which don't keep old packages around. If you don't like this checking
++# interupting your command line usage, it's much better to have something
++# manually check the metadata once an hour (yum-updatesd will do this).
++# metadata_expire=90m
+ 
+ # PUT YOUR REPOS HERE OR IN separate files named file.repo
+-# in /etc/yum/repos.d
++# in /etc/yum.repos.d
