@@ -4,20 +4,20 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.25
-Release:	2
+Release:	2.2
 License:	GPL
 Group:		Applications/System
+BuildRequires:	rpmbuild(macros) >= 1.219
 Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
 # Source0-md5:	7fdea025aa8fb88376a283959d5d2d0f
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-pld-ti-source.repo
-Source3:	%{name}-updatesd.init
-Source4:	%{name}-updatesd.sysconfig
 Patch1:		%{name}-obsoletes.patch
 # from util-vserver-*/contrib/
 Patch2:		%{name}-chroot.patch
 Patch3:		%{name}-pld.patch
 Patch4:		%{name}-amd64.patch
+Patch5:		%{name}-config.patch
 URL:		http://yum.baseurl.org/
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
@@ -29,10 +29,13 @@ Requires:	python-libxml2
 Requires:	python-pygpgme
 Requires:	python-rpm
 Requires:	python-sqlite
-Requires:	python-urlgrabber
-Requires:	rpm
-Requires:	yum-metadata-parser
+Requires:	python-urlgrabber >= 3.9.0-8
+Requires:	rpm >= 4.4.2
+Requires:	yum-metadata-parser >= 1.1.0
+BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_libdir		%{_prefix}/lib
 
 %description
 Yum is a utility that can check for and automatically download and
@@ -44,96 +47,61 @@ Yum to narzędzie sprawdzające i automatycznie ściągające i instalujące
 uaktualnione pakiety RPM. Zależności są ściągane automatycznie po
 zapytaniu użytkownika w razie potrzeby.
 
-%package updatesd
-Summary:	RPM update notifier daemon
-Summary(pl.UTF-8):	Demon powiadamiający o uaktualnionych RPM-ach
-Group:		Networking/Daemons
-Requires(post,preun):	/sbin/chkconfig
-Requires:	%{name} = %{version}-%{release}
-Requires:	dbus
-Requires:	python-dbus
-Requires:	rc-scripts
-
-%description updatesd
-This is a daemon which periodically checks for updates and can send
-notifications via mail, dbus or syslog.
-
-%description updatesd -l pl.UTF-8
-Ten pakiet zawiera demona regularnie sprawdzającego dostępność
-uaktualnień, mogącego wysyłać uaktualnienia pocztą elektroniczną,
-poprzez dbus lub sysloga.
-
 %prep
 %setup -q
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d,yum.repos.d},%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
+install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
 	PYLIBDIR=%{py_sitescriptdir}/..
 
-%if "%{pld_release}" == "ti"
-%ifarch i486 i686 ppc sparc alpha athlon
-%define		_ftp_arch	%{_target_cpu}
-%endif
-%ifarch %{x8664}
-%define		_ftp_arch	x86_64
-%endif
-%ifarch i586
-%define		_ftp_arch	i586
-%endif
-%ifarch pentium2 pentium3 pentium4
-%define		_ftp_arch	i686
-%endif
-%ifarch sparcv9 sparc64
-%define		_ftp_arch	sparc
-%endif
-sed -e '
-    s|%%ARCH%%|%{_ftp_arch}|g
-    ' < %{SOURCE2} > $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
-%else
-install -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum/repos.d/pld.repo
-%endif
-install -p %{SOURCE3} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
-install -p %{SOURCE4} $RPM_BUILD_ROOT/etc/sysconfig/yum-updatesd
+# for now, move repodir/yum.conf back
+mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/repos.d,/yum.repos.d}
+mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/yum.conf,yum.conf}
 
-%py_postclean
+cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum.repos.d/pld.repo
+
+# change %{py_sitedir} to %{py_sitescriptdir} for 'noarch' packages!
+%py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir} $RPM_BUILD_ROOT%{_datadir}/yum-cli
+%py_comp $RPM_BUILD_ROOT%{py_sitescriptdir} $RPM_BUILD_ROOT%{_datadir}/yum-cli
+
+%py_postclean %{_datadir}/yum-cli
 
 %find_lang %{name}
+
+# in yum-updatesd.spec
+rm $RPM_BUILD_ROOT/etc/dbus-1/system.d/yum-updatesd.conf
+rm $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
+rm $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-updatesd.conf
+rm $RPM_BUILD_ROOT%{_sbindir}/yum-updatesd
+rm $RPM_BUILD_ROOT%{_mandir}/man5/yum-updatesd.conf.5*
+rm $RPM_BUILD_ROOT%{_mandir}/man8/yum-updatesd.8*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %pretrans
 # migrate to new dir. having two dirs is really confusing
-if [ -d %{_sysconfdir}/yum.repos.d ]; then
-	echo >&2 "Migrating %{_sysconfdir}/yum.repos.d to %{_sysconfdir}/yum/repos.d"
-	mkdir -p %{_sysconfdir}/yum/repos.d
-	for a in %{_sysconfdir}/yum.repos.d/*; do
+if [ -d %{_sysconfdir}/yum/repos.d ]; then
+	echo >&2 "Migrating %{_sysconfdir}/yum/repos.d to %{_sysconfdir}/yum.repos.d"
+	mkdir -p %{_sysconfdir}/yum.repos.d
+	for a in %{_sysconfdir}/yum/repos.d/*; do
 		if [ -f "$a" ]; then
-			mv -vf $a %{_sysconfdir}/yum/repos.d/${a##*/}
+			mv -vf $a %{_sysconfdir}/yum.repos.d/${a##*/}
 		fi
 	done
-	rm -rf %{_sysconfdir}/yum.repos.d
-fi
-
-%post updatesd
-/sbin/chkconfig --add yum-updatesd
-%service yum-updatesd restart
-
-%preun updatesd
-if [ "$1" = "0" ]; then
-	/sbin/chkconfig --del yum-updatesd
-	%service -q yum-updatesd stop
+	rm -rf %{_sysconfdir}/yum/repos.d
 fi
 
 %triggerpostun -- %{name} < 3.2.12-3
@@ -145,29 +113,34 @@ fi
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc README AUTHORS TODO INSTALL ChangeLog
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum.conf
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/version-groups.conf
-%dir %{_sysconfdir}/yum
-%dir %{_sysconfdir}/yum/repos.d
-%dir %{_sysconfdir}/yum.repos.d
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/repos.d/*.repo
-%dir %{_sysconfdir}/yum/pluginconf.d
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/logrotate.d/%{name}
 
-%attr(755,root,root) %{_bindir}/yum
-%dir %{py_sitescriptdir}/yum
-%dir %{py_sitescriptdir}/rpmUtils
-%{_libdir}/yum-plugins
-%{_datadir}/yum-plugins
-%{py_sitescriptdir}/*/*.py[co]
-%{_datadir}/yum-cli
-/var/cache/yum
-%{_mandir}/man*/*
+# main yum config
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum.conf
 
-%files updatesd
-%defattr(644,root,root,755)
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/yum-updatesd.conf
-/etc/dbus-1/system.d/yum-updatesd.conf
-%attr(755,root,root) %{_sbindir}/yum-updatesd
-%config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/yum-updatesd
-%attr(754,root,root) /etc/rc.d/init.d/yum-updatesd
+%dir %{_sysconfdir}/yum
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum/version-groups.conf
+
+%dir %{_sysconfdir}/yum.repos.d
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum.repos.d/*.repo
+
+%dir %{_sysconfdir}/yum/pluginconf.d
+
+%attr(755,root,root) %{_bindir}/yum
+
+%dir %{py_sitescriptdir}/yum
+%dir %{_datadir}/yum-cli
+%{_datadir}/yum-cli/*.py[co]
+
+%{py_sitescriptdir}/yum/*.py[co]
+%dir %{py_sitescriptdir}/rpmUtils
+%{py_sitescriptdir}/rpmUtils/*.py[co]
+
+%dir %{_libdir}/yum-plugins
+%dir %{_datadir}/yum-plugins
+
+%{_mandir}/man5/yum.conf.5*
+%{_mandir}/man8/yum-shell.8*
+%{_mandir}/man8/yum.8*
+
+/var/cache/yum
