@@ -1,0 +1,23 @@
+--- yum/config.py~  2008-02-08 16:22:27.000000000 -0500
++++ yum/config.py   2008-02-08 16:22:28.000000000 -0500
+@@ -593,7 +593,7 @@
+     # NOTE: If you set this to 2, then because it keeps the current kernel it
+     # means if you ever install an "old" kernel it'll get rid of the newest one
+     # so you probably want to use 3 as a minimum ... if you turn it on.
+-    installonly_limit = PositiveIntOption(0, range_min=2,
++    installonly_limit = PositiveIntOption(3, range_min=2,
+                                           names_of_0=["0", "<off>"])
+     kernelpkgnames = ListOption(['kernel','kernel-smp', 'kernel-enterprise',
+             'kernel-bigmem', 'kernel-BOOT', 'kernel-PAE', 'kernel-PAE-debug'])
+
+--- docs/yum.conf.5~	2009-05-11 11:55:25.000000000 -0400
++++ docs/yum.conf.5	2009-05-11 11:55:25.000000000 -0400
+@@ -108,7 +108,7 @@
+ 
+ .IP \fBinstallonly_limit \fR
+ Number of packages listed in installonlypkgs to keep installed at the same
+-time. Setting to 0 disables this feature. Default is '0'. Note that this
++time. Setting to 0 disables this feature. Default is '3'. Note that this
+ functionality used to be in the "installonlyn" plugin, where this option was
+ altered via. tokeep.
+ 
