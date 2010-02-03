@@ -4,7 +4,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.25
-Release:	2.8
+Release:	2.16
 License:	GPL
 Group:		Applications/System
 BuildRequires:	rpmbuild(macros) >= 1.219
@@ -38,7 +38,7 @@ Requires:	python-rpm
 Requires:	python-sqlite
 Requires:	python-urlgrabber >= 1:3.9.1
 Requires:	rpm >= 4.4.2
-Requires:	yum-metadata-parser >= 1.1.0
+Requires:	yum-metadata-parser >= 1.1.4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
