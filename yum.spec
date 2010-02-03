@@ -4,7 +4,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.25
-Release:	2.2
+Release:	2.8
 License:	GPL
 Group:		Applications/System
 BuildRequires:	rpmbuild(macros) >= 1.219
@@ -18,6 +18,13 @@ Patch2:		%{name}-chroot.patch
 Patch3:		%{name}-pld.patch
 Patch4:		%{name}-amd64.patch
 Patch5:		%{name}-config.patch
+# fc
+Patch10:	installonlyn-enable.patch
+Patch11:	%{name}-mirror-priority.patch
+Patch12:	%{name}-manpage-files.patch
+Patch13:	%{name}-multilib-policy-best.patch
+Patch14:	no-more-exactarchlist.patch
+Patch16:	%{name}-HEAD.patch
 URL:		http://yum.baseurl.org/
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
@@ -29,7 +36,7 @@ Requires:	python-libxml2
 Requires:	python-pygpgme
 Requires:	python-rpm
 Requires:	python-sqlite
-Requires:	python-urlgrabber >= 3.9.0-8
+Requires:	python-urlgrabber >= 1:3.9.1
 Requires:	rpm >= 4.4.2
 Requires:	yum-metadata-parser >= 1.1.0
 BuildArch:	noarch
@@ -49,6 +56,14 @@ zapytaniu użytkownika w razie potrzeby.
 
 %prep
 %setup -q
+# fc
+%patch10 -p0
+%patch11 -p0
+%patch12 -p0
+%patch13 -p0
+%patch14 -p0
+%patch16 -p1
+# pld
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -144,3 +159,6 @@ fi
 %{_mandir}/man8/yum.8*
 
 /var/cache/yum
+
+# bash-completion subpackage
+/etc/bash_completion.d/yum.bash
