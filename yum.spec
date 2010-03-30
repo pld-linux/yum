@@ -4,7 +4,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.25
-Release:	3
+Release:	4
 License:	GPL
 Group:		Applications/System
 BuildRequires:	rpmbuild(macros) >= 1.219
