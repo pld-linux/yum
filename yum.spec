@@ -4,7 +4,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.28
-Release:	0.1
+Release:	1
 License:	GPL
 Group:		Applications/System
 BuildRequires:	rpmbuild(macros) >= 1.219
