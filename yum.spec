@@ -3,13 +3,13 @@
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.2.25
-Release:	5
+Version:	3.2.28
+Release:	0.1
 License:	GPL
 Group:		Applications/System
 BuildRequires:	rpmbuild(macros) >= 1.219
 Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
-# Source0-md5:	7fdea025aa8fb88376a283959d5d2d0f
+# Source0-md5:	91eff58aa4c25cd4f46b21201bbf9bea
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-pld-ti-source.repo
 Patch1:		%{name}-obsoletes.patch
@@ -24,7 +24,6 @@ Patch11:	%{name}-mirror-priority.patch
 Patch12:	%{name}-manpage-files.patch
 Patch13:	%{name}-multilib-policy-best.patch
 Patch14:	no-more-exactarchlist.patch
-Patch16:	%{name}-HEAD.patch
 URL:		http://yum.baseurl.org/
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
@@ -62,7 +61,6 @@ zapytaniu użytkownika w razie potrzeby.
 %patch12 -p0
 %patch13 -p0
 %patch14 -p0
-%patch16 -p1
 # pld
 %patch1 -p1
 %patch2 -p1
