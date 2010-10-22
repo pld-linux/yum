@@ -1,15 +1,12 @@
---- yum-3.2.25/rpmUtils/arch.py	2009-11-18 14:02:08.718489471 +0200
-+++ yum-3.2.25/rpmUtils/arch.py	2009-11-18 14:09:16.755112524 +0200
-@@ -205,30 +205,10 @@
-         
+--- yum-3.2.28/rpmUtils/arch.py.orig	2010-07-20 16:21:32.000000000 +0300
++++ yum-3.2.28/rpmUtils/arch.py	2010-10-22 23:51:00.055319465 +0300
+@@ -212,24 +212,10 @@
+         return []
  
  def getCanonX86Arch(arch):
 -    # 
      if arch == "i586":
--        f = open("/proc/cpuinfo", "r")
--        lines = f.readlines()
--        f.close()
--        for line in lines:
+-        for line in _try_read_cpuinfo():
 -            if line.startswith("model name") and line.find("Geode(TM)") != -1:
 -                return "geode"
 -        return arch
@@ -18,10 +15,7 @@
 -        return arch
 -
 -    # if we're i686 and AuthenticAMD, then we should be an athlon
--    f = open("/proc/cpuinfo", "r")
--    lines = f.readlines()
--    f.close()
--    for line in lines:
+-    for line in _try_read_cpuinfo():
 -        if line.startswith("vendor") and line.find("AuthenticAMD") != -1:
 -            return "athlon"
 -        # i686 doesn't guarantee cmov, but we depend on it
@@ -34,7 +28,7 @@
      return arch
  
  def getCanonPPCArch(arch):
-@@ -280,27 +260,6 @@
+@@ -275,24 +261,6 @@
          return "sparcv8"
      return arch
  
@@ -43,10 +37,7 @@
 -        return arch
 -
 -    vendor = None
--    f = open("/proc/cpuinfo", "r")
--    lines = f.readlines()
--    f.close()
--    for line in lines:
+-    for line in _try_read_cpuinfo():
 -        if line.startswith("vendor_id"):
 -            vendor = line.split(':')[1]
 -            break
@@ -62,7 +53,7 @@
  def getCanonArch(skipRpmPlatform = 0):
      if not skipRpmPlatform and os.access("/etc/rpm/platform", os.R_OK):
          try:
-@@ -321,8 +280,6 @@
+@@ -313,8 +281,6 @@
          return getCanonPPCArch(arch)
      if arch.startswith("sparc"):
          return getCanonSPARCArch(arch)
@@ -70,4 +61,3 @@
 -        return getCanonX86_64Arch(arch)
  
      return arch
- 
