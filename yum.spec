@@ -1,13 +1,25 @@
 # TODO
 # - PLDize (or drop) /etc/yum/version-groups.conf
+# # yum
+#Loaded plugins: refresh-packagekit
+#Traceback (most recent call last):
+#  File "/usr/bin/yum", line 29, in <module>
+#    yummain.user_main(sys.argv[1:], exit_code=True)
+#  File "yummain.py", line 258, in user_main
+#  File "yummain.py", line 88, in main
+#  File "cli.py", line 226, in getOptionsConfig
+#  File "/usr/share/python2.7/site-packages/../site-packages/yum/__init__.py", line 821, in <lambda>
+#  File "/usr/share/python2.7/site-packages/../site-packages/yum/__init__.py", line 309, in _getConfig
+#  File "/usr/share/python2.7/site-packages/../site-packages/yum/config.py", line 938, in readMainConfig
+#  File "/usr/share/python2.7/site-packages/../site-packages/yum/config.py", line 917, in _apply_installroot
+#AttributeError: 'YumConf' object has no attribute 'getRootedPath'
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.2.28
-Release:	1
+Release:	0.1
 License:	GPL
 Group:		Applications/System
-BuildRequires:	rpmbuild(macros) >= 1.219
 Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
 # Source0-md5:	91eff58aa4c25cd4f46b21201bbf9bea
 Source1:	%{name}-pld-source.repo
