@@ -95,6 +95,9 @@ zapytaniu użytkownika w razie potrzeby.
 %{__make}
 
 %if %{with tests}
+# yum itself must work (tests does not cover import errors)
+./yummain.py --version
+
 # test/check-po-yes-no.py prints chinese to screen, need to enable utf8
 export LC_ALL=en_US.utf8
 %{__make} test
