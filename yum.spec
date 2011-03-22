@@ -49,7 +49,7 @@ BuildRequires:	rpmbuild(macros) >= 1.228
 %if %{with tests}
 BuildRequires:	python-nose
 %if %(locale -a | grep -qFx en_US.utf8; echo $?)
-BuildRequires:  glibc-localedb-all
+BuildRequires:	glibc-localedb-all
 %endif
 %endif
 Requires:	python >= 1:2.5
@@ -105,7 +105,7 @@ export LC_ALL=en_US.utf8
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
+install -d $RPM_BUILD_ROOT{%{_sysconfdir}/yum/pluginconf.d,%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT \
@@ -115,9 +115,11 @@ install -d $RPM_BUILD_ROOT{/etc/{rc.d,sysconfig,yum/pluginconf.d},%{_libdir}/yum
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/repos.d,/yum.repos.d}
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/yum.conf,yum.conf}
 
-cp -a %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum.repos.d/pld.repo
+cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum.repos.d/pld.repo
 
-# change %{py_sitedir} to %{py_sitescriptdir} for 'noarch' packages!
+# see yum.conf(5)
+touch $RPM_BUILD_ROOT/var/lib/yum/uuid
+
 %py_ocomp $RPM_BUILD_ROOT%{py_sitescriptdir} $RPM_BUILD_ROOT%{_datadir}/yum-cli
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir} $RPM_BUILD_ROOT%{_datadir}/yum-cli
 
@@ -170,6 +172,8 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/yum.repos.d/*.repo
 
 %dir %{_sysconfdir}/yum/pluginconf.d
+%dir %{_sysconfdir}/yum/protected.d
+%dir %{_sysconfdir}/yum/vars
 
 %attr(755,root,root) %{_bindir}/yum
 
@@ -189,6 +193,8 @@ fi
 %{_mandir}/man8/yum.8*
 
 /var/cache/yum
+%dir /var/lib/yum
+%ghost /var/lib/yum/uuid
 
 # bash-completion subpackage
 /etc/bash_completion.d/yum.bash
