@@ -117,6 +117,7 @@ mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/yum.conf,yum.conf}
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum.repos.d/pld.repo
 
+install -d $RPM_BUILD_ROOT/var/lib/yum/{history,plugins,yumdb}
 # see yum.conf(5)
 touch $RPM_BUILD_ROOT/var/lib/yum/uuid
 
@@ -193,7 +194,11 @@ fi
 %{_mandir}/man8/yum.8*
 
 /var/cache/yum
+
 %dir /var/lib/yum
+%dir /var/lib/yum/history
+%dir /var/lib/yum/plugins
+%dir /var/lib/yum/yumdb
 %ghost /var/lib/yum/uuid
 
 # bash-completion subpackage
