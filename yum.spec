@@ -4,6 +4,7 @@
 
 # TODO
 # - PLDize (or drop) /etc/yum/version-groups.conf
+# - fix yum startup (likely vserver chroot patch needs updating):
 # # yum
 #Loaded plugins: refresh-packagekit
 #Traceback (most recent call last):
@@ -43,9 +44,14 @@ Patch14:	no-more-exactarchlist.patch
 URL:		http://yum.baseurl.org/
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
-%{?with_tests:BuildRequires:	python-nose}
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
+%if %{with tests}
+BuildRequires:	python-nose
+%if %(locale -a | grep -qFx en_US.utf8; echo $?)
+BuildRequires:  glibc-localedb-all
+%endif
+%endif
 Requires:	python >= 1:2.5
 Requires:	python-iniparse
 Requires:	python-libxml2
@@ -88,7 +94,11 @@ zapytaniu użytkownika w razie potrzeby.
 %build
 %{__make}
 
-%{?with_tests:%{__make} test}
+%if %{with tests}
+# test/check-po-yes-no.py prints chinese to screen, need to enable utf8
+export LC_ALL=en_US.utf8
+%{__make} test
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
