@@ -1,3 +1,7 @@
+#
+# Conditional build:
+%bcond_without	tests		# build without tests
+
 # TODO
 # - PLDize (or drop) /etc/yum/version-groups.conf
 # # yum
@@ -39,6 +43,7 @@ Patch14:	no-more-exactarchlist.patch
 URL:		http://yum.baseurl.org/
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
+%{?with_tests:BuildRequires:	python-nose}
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 Requires:	python >= 1:2.5
@@ -82,6 +87,8 @@ zapytaniu użytkownika w razie potrzeby.
 
 %build
 %{__make}
+
+%{?with_tests:%{__make} test}
 
 %install
 rm -rf $RPM_BUILD_ROOT
