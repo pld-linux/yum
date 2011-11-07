@@ -108,8 +108,8 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/yum/pluginconf.d,%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
 
 %{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT \
-	PYLIBDIR=%{py_sitescriptdir}/..
+	PYLIBDIR=%{py_scriptdir} \
+	DESTDIR=$RPM_BUILD_ROOT
 
 # for now, move repodir/yum.conf back
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/repos.d,/yum.repos.d}
@@ -125,6 +125,9 @@ touch $RPM_BUILD_ROOT/var/lib/yum/uuid
 %py_comp $RPM_BUILD_ROOT%{py_sitescriptdir} $RPM_BUILD_ROOT%{_datadir}/yum-cli
 
 %py_postclean %{_datadir}/yum-cli
+
+mv $RPM_BUILD_ROOT/usr/share/locale/id{_ID,}
+mv $RPM_BUILD_ROOT/usr/share/locale/lt{_LT,}
 
 %find_lang %{name}
 
@@ -193,7 +196,7 @@ fi
 %{_mandir}/man8/yum-shell.8*
 %{_mandir}/man8/yum.8*
 
-/var/cache/yum
+%dir /var/cache/yum
 
 %dir /var/lib/yum
 %dir /var/lib/yum/history
