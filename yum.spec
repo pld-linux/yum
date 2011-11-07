@@ -4,34 +4,26 @@
 
 # TODO
 # - PLDize (or drop) /etc/yum/version-groups.conf
-# - fix yum startup (likely vserver chroot patch needs updating):
-# # yum
-#Loaded plugins: refresh-packagekit
-#Traceback (most recent call last):
-#  File "/usr/bin/yum", line 29, in <module>
-#    yummain.user_main(sys.argv[1:], exit_code=True)
-#  File "yummain.py", line 258, in user_main
-#  File "yummain.py", line 88, in main
-#  File "cli.py", line 226, in getOptionsConfig
-#  File "/usr/share/python2.7/site-packages/../site-packages/yum/__init__.py", line 821, in <lambda>
-#  File "/usr/share/python2.7/site-packages/../site-packages/yum/__init__.py", line 309, in _getConfig
-#  File "/usr/share/python2.7/site-packages/../site-packages/yum/config.py", line 938, in readMainConfig
-#  File "/usr/share/python2.7/site-packages/../site-packages/yum/config.py", line 917, in _apply_installroot
-#AttributeError: 'YumConf' object has no attribute 'getRootedPath'
+# - decide about cron:
+#   /etc/cron.daily/0yum.cron
+#   /etc/rc.d/init.d/yum-cron
+#   /etc/sysconfig/yum-cron
+#   /etc/yum/yum-daily.yum
+#   /etc/yum/yum-weekly.yum
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
-Version:	3.2.28
-Release:	0.1
+Version:	3.4.3
+Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://yum.baseurl.org/download/3.2/%{name}-%{version}.tar.gz
-# Source0-md5:	91eff58aa4c25cd4f46b21201bbf9bea
+Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
+# Source0-md5:	7c8ea8beba5b4e7fe0c215e4ebaa26ed
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-pld-ti-source.repo
 Patch1:		%{name}-obsoletes.patch
 # from util-vserver-*/contrib/
-Patch2:		%{name}-chroot.patch
+#Patch2:		%{name}-chroot.patch # disabled for now. broken or not needed
 Patch3:		%{name}-pld.patch
 Patch4:		%{name}-amd64.patch
 Patch5:		%{name}-config.patch
@@ -86,7 +78,7 @@ zapytaniu użytkownika w razie potrzeby.
 %patch14 -p0
 # pld
 %patch1 -p1
-%patch2 -p1
+#%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
@@ -96,7 +88,14 @@ zapytaniu użytkownika w razie potrzeby.
 
 %if %{with tests}
 # yum itself must work (tests does not cover import errors)
-./yummain.py --version
+# we ignore exit code, as it will exit with error if yum is not installed:
+# $ ./yummain.py --version
+#3.4.3
+#CRITICAL:yum.cli:Config Error: Error accessing file for config file:///etc/yum.conf
+# and it will fail other ways if incompatible yum version is installed
+
+ver=$(./yummain.py --version | head -n1)
+test $ver = %{version}
 
 # test/check-po-yes-no.py prints chinese to screen, need to enable utf8
 export LC_ALL=en_US.utf8
@@ -129,12 +128,12 @@ touch $RPM_BUILD_ROOT/var/lib/yum/uuid
 %find_lang %{name}
 
 # in yum-updatesd.spec
-rm $RPM_BUILD_ROOT/etc/dbus-1/system.d/yum-updatesd.conf
-rm $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
-rm $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-updatesd.conf
-rm $RPM_BUILD_ROOT%{_sbindir}/yum-updatesd
-rm $RPM_BUILD_ROOT%{_mandir}/man5/yum-updatesd.conf.5*
-rm $RPM_BUILD_ROOT%{_mandir}/man8/yum-updatesd.8*
+%{__rm} $RPM_BUILD_ROOT/etc/dbus-1/system.d/yum-updatesd.conf
+%{__rm} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-updatesd
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-updatesd.conf
+%{__rm} $RPM_BUILD_ROOT%{_sbindir}/yum-updatesd
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/man5/yum-updatesd.conf.5*
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/man8/yum-updatesd.8*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
