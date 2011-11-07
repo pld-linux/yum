@@ -126,8 +126,9 @@ touch $RPM_BUILD_ROOT/var/lib/yum/uuid
 
 %py_postclean %{_datadir}/yum-cli
 
-mv $RPM_BUILD_ROOT/usr/share/locale/id{_ID,}
-mv $RPM_BUILD_ROOT/usr/share/locale/lt{_LT,}
+mv $RPM_BUILD_ROOT%{_datadir}/locale/lt{_LT,}
+# duplicate with id
+rm -r $RPM_BUILD_ROOT%{_datadir}/locale/id_ID
 
 %find_lang %{name}
 
