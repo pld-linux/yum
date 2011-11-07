@@ -40,6 +40,7 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 %if %{with tests}
 BuildRequires:	python-nose
+BuildRequires:	yum-metadata-parser
 %if %(locale -a | grep -qFx en_US.utf8; echo $?)
 BuildRequires:	glibc-localedb-all
 %endif
