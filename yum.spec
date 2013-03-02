@@ -38,6 +38,8 @@ Patch14:	no-more-exactarchlist.patch
 URL:		http://yum.baseurl.org/
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
+BuildRequires:	python-rpm
+BuildRequires:	python-urlgrabber
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
 %if %{with tests}
@@ -131,9 +133,9 @@ touch $RPM_BUILD_ROOT/var/lib/yum/uuid
 
 %py_postclean %{_datadir}/yum-cli
 
-mv $RPM_BUILD_ROOT%{_datadir}/locale/lt{_LT,}
+mv $RPM_BUILD_ROOT%{_localedir}/lt{_LT,}
 # duplicate with id
-rm -r $RPM_BUILD_ROOT%{_datadir}/locale/id_ID
+rm -r $RPM_BUILD_ROOT%{_localedir}/id_ID
 
 %find_lang %{name}
 
