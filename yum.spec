@@ -14,7 +14,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
@@ -27,6 +27,7 @@ Patch1:		%{name}-obsoletes.patch
 Patch3:		%{name}-pld.patch
 Patch4:		%{name}-amd64.patch
 Patch5:		%{name}-config.patch
+Patch6:		nosetests.patch
 # fc
 Patch10:	installonlyn-enable.patch
 Patch11:	%{name}-mirror-priority.patch
@@ -83,6 +84,7 @@ zapytaniu użytkownika w razie potrzeby.
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
+%patch6 -p1
 
 %build
 %{__make}
@@ -100,7 +102,8 @@ test $ver = %{version}
 
 # test/check-po-yes-no.py prints chinese to screen, need to enable utf8
 export LC_ALL=en_US.utf8
-%{__make} test
+%{__make} test \
+	NOSETESTS=nosetests-%{py_ver}
 %endif
 
 %install

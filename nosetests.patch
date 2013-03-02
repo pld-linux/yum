@@ -1,0 +1,34 @@
+--- yum-3.4.3/Makefile~	2011-06-28 23:27:22.000000000 +0300
++++ yum-3.4.3/Makefile	2013-03-02 21:23:54.119843970 +0200
+@@ -8,6 +8,7 @@
+ RELEASE=$(shell awk '/Release:/ { print $$2 }' ${PKGNAME}.spec)
+ CVSTAG=yum-$(subst .,_,$(VERSION)-$(RELEASE))
+ PYTHON=python
++NOSETESTS=nosetests
+ WEBHOST = yum.baseurl.org
+ WEB_DOC_PATH = /srv/projects/yum/web/download/docs/yum-api/
+ 
+@@ -62,12 +63,12 @@
+ 	epydoc --check $(DOCS)
+ 
+ test:
+-	@nosetests -i ".*test" test
++	@$(NOSETESTS) -i ".*test" test
+ 	-@test/check-po-yes-no.py
+ 	cd po; make test
+ 
+ test-skipbroken:
+-	@nosetests -i ".*test" test/skipbroken-tests.py
++	@$(NOSETESTS) -i ".*test" test/skipbroken-tests.py
+ 
+ check: test
+ 
+@@ -82,7 +83,7 @@
+ 	git log --since=2007-05-16 --pretty --numstat --summary | git2cl | cat > ChangeLog
+ 
+ testnewbehavior:
+-	@NEW_BEHAVIOR=1 nosetests -i ".*test" test
++	@NEW_BEHAVIOR=1 $(NOSETESTS) -i ".*test" test
+ 
+ archive: remove_spec = ${PKGNAME}-daily.spec
+ archive: _archive
