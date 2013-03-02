@@ -29,6 +29,7 @@ Patch4:		%{name}-amd64.patch
 Patch5:		%{name}-config.patch
 Patch6:		nosetests.patch
 Patch7:		rpm5.patch
+Patch8:		tests.patch
 # fc
 Patch10:	installonlyn-enable.patch
 Patch11:	%{name}-mirror-priority.patch
@@ -89,6 +90,7 @@ zapytaniu użytkownika w razie potrzeby.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
+%patch8 -p1
 
 %build
 %{__make}

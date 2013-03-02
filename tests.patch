@@ -1,0 +1,12 @@
+--- yum-3.4.3/test/check-po-yes-no.py~	2013-03-02 21:52:33.000000000 +0200
++++ yum-3.4.3/test/check-po-yes-no.py	2013-03-02 21:52:41.303006222 +0200
+@@ -5,7 +5,8 @@
+ 
+ import sys
+ import glob
+-
++import unittest
++from testbase import *
+ from yum.misc import to_utf8
+ 
+ def trans(msg, default):
