@@ -4,18 +4,12 @@
 
 # TODO
 # - PLDize (or drop) /etc/yum/version-groups.conf
-# - decide about cron:
-#   /etc/cron.daily/0yum.cron
-#   /etc/rc.d/init.d/yum-cron
-#   /etc/sysconfig/yum-cron
-#   /etc/yum/yum-daily.yum
-#   /etc/yum/yum-weekly.yum
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
 Release:	2
-License:	GPL
+License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
 # Source0-md5:	7c8ea8beba5b4e7fe0c215e4ebaa26ed
@@ -119,6 +113,13 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/yum/pluginconf.d,%{_libdir}/yum-plugin
 %{__make} install \
 	PYLIBDIR=%{py_scriptdir} \
 	DESTDIR=$RPM_BUILD_ROOT
+
+# no cron (unstable, and poldek is main pkg manager)
+%{__rm} $RPM_BUILD_ROOT/etc/cron.daily/0yum.cron
+%{__rm} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-cron
+%{__rm} $RPM_BUILD_ROOT/etc/sysconfig/yum-cron
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-daily.yum
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-weekly.yum
 
 # for now, move repodir/yum.conf back
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/repos.d,/yum.repos.d}
