@@ -24,6 +24,7 @@ Patch5:		%{name}-config.patch
 Patch6:		nosetests.patch
 Patch7:		rpm5.patch
 Patch8:		tests.patch
+Patch9:		pld-release.patch
 # fc
 Patch10:	installonlyn-enable.patch
 Patch11:	%{name}-mirror-priority.patch
@@ -85,6 +86,7 @@ zapytaniu użytkownika w razie potrzeby.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 %build
 %{__make}

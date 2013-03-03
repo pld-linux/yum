@@ -1,0 +1,40 @@
+--- yum-3.4.3/yum/config.py~	2013-03-02 21:24:45.000000000 +0200
++++ yum-3.4.3/yum/config.py	2013-03-03 18:30:14.106276193 +0200
+@@ -612,7 +612,7 @@
+     debuglevel = IntOption(2, 0, 10)
+     errorlevel = IntOption(2, 0, 10)
+ 
+-    distroverpkg = Option('redhat-release')
++    distroverpkg = Option('pld-release')
+     installroot = Option('/')
+     config_file_path = Option('/etc/yum/yum.conf')
+     plugins = BoolOption(False)
+@@ -1023,7 +1023,7 @@
+     # we're going to take the first one - if there is more than one of these
+     # then the user needs a beating
+     if idx.count() == 0:
+-        releasever = '$releasever'
++        releasever = None
+     else:
+         hdr = idx.next()
+         releasever = hdr['version']
+--- yum-3.4.3/./yum/__init__.py~	2013-03-02 21:24:45.000000000 +0200
++++ yum-3.4.3/./yum/__init__.py	2013-03-03 18:55:57.354165543 +0200
+@@ -120,7 +120,7 @@
+         self.syslog_facility = None
+         self.syslog_device = None
+         self.arch = None
+-        self.releasever = None
++        self.releasever = 'th'
+         self.uuid = None
+ 
+ 
+@@ -357,7 +357,7 @@
+         # repos are ver/arch specific so add $basearch/$releasever
+         self.conf._repos_persistdir = os.path.normpath('%s/repos/%s/%s/'
+                % (self.conf.persistdir,  self.yumvar.get('basearch', '$basearch'),
+-                  self.yumvar.get('releasever', '$releasever')))        
++                  self.yumvar.get('releasever', None)))
+         self.doFileLogSetup(self.conf.uid, self.conf.logfile)
+         self.verbose_logger.debug('Config time: %0.3f' % (time.time() - conf_st))
+         self.plugins.run('init')
