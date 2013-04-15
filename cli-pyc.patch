@@ -1,0 +1,11 @@
+--- yum-3.4.3/etc/yum.bash~	2013-04-15 09:52:35.000000000 +0300
++++ yum-3.4.3/etc/yum.bash	2013-04-15 10:03:20.014705073 +0300
+@@ -12,7 +12,7 @@
+         return
+     fi
+     COMPREPLY+=( $(
+-        /usr/share/yum-cli/completion-helper.py -d 0 -C "$@" 2>/dev/null ) )
++        python /usr/share/yum-cli/completion-helper.pyc -d 0 -C "$@" 2>/dev/null ) )
+ }
+ 
+ _yum_list()

@@ -1,12 +1,12 @@
---- yum-3.4.3/test/check-po-yes-no.py~	2013-03-02 21:52:33.000000000 +0200
-+++ yum-3.4.3/test/check-po-yes-no.py	2013-03-02 21:52:41.303006222 +0200
-@@ -5,7 +5,8 @@
- 
+--- yum-3.4.3/test/check-po-yes-no.py~	2013-04-15 09:02:49.000000000 +0300
++++ yum-3.4.3/test/check-po-yes-no.py	2013-04-15 09:03:25.975416605 +0300
+@@ -6,6 +6,9 @@
  import sys
  import glob
--
+ 
 +import unittest
 +from testbase import *
- from yum.misc import to_utf8
- 
- def trans(msg, default):
++
+ # Don't import from yum, as it isn't there when we are distro. building...
+ def to_utf8(obj, errors='replace'):
+     '''convert 'unicode' to an encoded utf-8 byte string '''

@@ -1,19 +1,38 @@
---- docs/yum.8~	2009-10-12 16:58:13.000000000 +0300
-+++ docs/yum.8	2010-02-03 01:50:03.221231119 +0200
-@@ -474,9 +474,9 @@
+commit 102915d4d402493c48d434ae1d1756225c4468e0
+Author: James Antill <james@and.org>
+Date:   Mon Jun 14 01:15:21 2010 -0400
+
+    Port manpage files path fixups.
+
+diff --git a/docs/yum.8 b/docs/yum.8
+index d5ede0a..3bdb408 100644
+--- a/docs/yum.8
++++ b/docs/yum.8
+@@ -568,7 +568,7 @@ option in yum.conf. For a plugin to work, the following conditions must be met:
+ 1. The plugin module file must be installed in the plugin path as just
+ described.
+ .LP
+-2. The global \fBplugins\fP option in /etc/yum/yum.conf must be set to `1'.
++2. The global \fBplugins\fP option in /etc/yum.conf must be set to `1'.
+ .LP
+ 3. A configuration file for the plugin must exist in
+ /etc/yum/pluginconf.d/<plugin_name>.conf and the \fBenabled\fR setting in this
+@@ -584,9 +584,9 @@ configuration options.
  .PP
  .SH "FILES"
  .nf
 -/etc/yum/yum.conf
 +/etc/yum.conf
-+/etc/yum.repos.d/
  /etc/yum/version-groups.conf
 -/etc/yum/repos.d/
++/etc/yum.repos.d/
  /etc/yum/pluginconf.d/
  /var/cache/yum/
  .fi 
---- olddocs/yum.conf.5.orig	2009-01-21 13:33:04.000000000 -0500
-+++ docs/yum.conf.5	2009-01-21 13:34:47.000000000 -0500
+diff --git a/docs/yum.conf.5 b/docs/yum.conf.5
+index ca36103..42815b9 100644
+--- a/docs/yum.conf.5
++++ b/docs/yum.conf.5
 @@ -4,10 +4,10 @@
  \fByum.conf\fR \- Configuration file for \fByum(8)\fR.
  .SH "DESCRIPTION"
@@ -27,9 +46,9 @@
  See the \fBreposdir\fR option below for further details.
  
  .SH "PARAMETERS"
-@@ -38,10 +38,10 @@
- 
- .IP \fBreposdir\fR
+@@ -42,10 +42,10 @@ of headers and packages after successful installation.  Default is '1'
+ .IP
+ \fBreposdir\fR
  A list of directories where yum should look for .repo files which define
 -repositories to use. Default is `/etc/yum/repos.d'. Each
 +repositories to use. Default is `/etc/yum.repos.d'. Each
@@ -39,8 +58,8 @@
 +repositories defined in /etc/yum.conf to form the complete set of
  repositories that yum will use.
  
- .IP \fBdebuglevel\fR
-@@ -511,8 +511,8 @@
+ .IP
+@@ -745,8 +745,8 @@ for any given command. Defaults to False.
  
  .SH "URL INCLUDE SYNTAX"
  .LP
@@ -51,7 +70,7 @@
  line of the following format:
  
  include=url://to/some/location
-@@ -549,8 +549,8 @@
+@@ -812,8 +812,8 @@ data in any value.
  
  .SH "FILES"
  .nf
@@ -60,5 +79,5 @@
 +/etc/yum.conf
 +/etc/yum.repos.d/
  /etc/yum/pluginconf.d/
- 
- .SH "SEE ALSO"
+ /etc/yum/protected.d
+ /etc/yum/vars

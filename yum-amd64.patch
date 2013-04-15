@@ -1,14 +1,16 @@
---- yum-3.2.28/rpmUtils/arch.py.orig	2010-07-20 16:21:32.000000000 +0300
-+++ yum-3.2.28/rpmUtils/arch.py	2010-10-22 23:51:00.055319465 +0300
-@@ -212,24 +212,10 @@
-         return []
+--- yum-3.4.3/rpmUtils/arch.py~	2013-04-15 09:00:20.000000000 +0300
++++ yum-3.4.3/rpmUtils/arch.py	2013-04-15 09:01:54.771200925 +0300
+@@ -258,27 +258,9 @@
+         offset = offset + fmtlen
  
  def getCanonX86Arch(arch):
 -    # 
      if arch == "i586":
 -        for line in _try_read_cpuinfo():
--            if line.startswith("model name") and line.find("Geode(TM)") != -1:
--                return "geode"
+-            if line.startswith("model name"):
+-                if line.find("Geode(TM)") != -1:
+-                    return "geode"
+-                break
 -        return arch
 -    # only athlon vs i686 isn't handled with uname currently
 -    if arch != "i686":
@@ -19,15 +21,15 @@
 -        if line.startswith("vendor") and line.find("AuthenticAMD") != -1:
 -            return "athlon"
 -        # i686 doesn't guarantee cmov, but we depend on it
--        elif line.startswith("flags") and line.find("cmov") == -1:
--            return "i586"
--
+-        elif line.startswith("flags"):
+-            if line.find("cmov") == -1:
+-                return "i586"
+-            break
 +        # nearest matching arch in Th is i486
 +        return "i486"
-+    # not sure what we have here
+ 
      return arch
  
- def getCanonPPCArch(arch):
 @@ -275,24 +261,6 @@
          return "sparcv8"
      return arch

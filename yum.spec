@@ -8,16 +8,17 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	2
+Release:	3
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
 # Source0-md5:	7c8ea8beba5b4e7fe0c215e4ebaa26ed
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-pld-ti-source.repo
-Patch1:		%{name}-obsoletes.patch
 # from util-vserver-*/contrib/
-#Patch2:		%{name}-chroot.patch # disabled for now. broken or not needed
+#Patch:		%{name}-chroot.patch # disabled for now. broken or not needed
+Patch1:		%{name}-obsoletes.patch
+Patch2:		cli-pyc.patch
 Patch3:		%{name}-pld.patch
 Patch4:		%{name}-amd64.patch
 Patch5:		%{name}-config.patch
@@ -26,18 +27,22 @@ Patch7:		rpm5.patch
 Patch8:		tests.patch
 Patch9:		pld-release.patch
 # fc
-Patch10:	installonlyn-enable.patch
-Patch11:	%{name}-mirror-priority.patch
+Patch10:	%{name}-HEAD.patch
+# Patch10-md5:	fed00a3fcdb2ab0115bf8e1949309763
+Patch11:	installonlyn-enable.patch
 Patch12:	%{name}-manpage-files.patch
-Patch13:	%{name}-multilib-policy-best.patch
-Patch14:	no-more-exactarchlist.patch
+Patch13:	no-more-exactarchlist.patch
+Patch14:	%{name}-completion-helper.patch
+Patch15:	%{name}-distro-configs.patch
 URL:		http://yum.baseurl.org/
+BuildRequires:	bash-completion >= 2.0
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
 BuildRequires:	python-rpm
 BuildRequires:	python-urlgrabber
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
+BuildConflicts:	yum < 3.4.3-2.1
 %if %{with tests}
 BuildRequires:	python-nose
 BuildRequires:	yum-metadata-parser
@@ -69,17 +74,27 @@ Yum to narzędzie sprawdzające i automatycznie ściągające i instalujące
 uaktualnione pakiety RPM. Zależności są ściągane automatycznie po
 zapytaniu użytkownika w razie potrzeby.
 
+%package -n bash-completion-%{name}
+Summary:	bash-completion for Yum
+Group:		Applications/Shells
+Requires:	%{name}
+Requires:	bash-completion >= 2.0
+
+%description -n bash-completion-%{name}
+bash-completion for Yum.
+
 %prep
 %setup -q
 # fc
-%patch10 -p0
+%patch10 -p1
 %patch11 -p0
-%patch12 -p0
+%patch12 -p1
 %patch13 -p0
-%patch14 -p0
+%patch14 -p1
+%patch15 -p1
 # pld
 %patch1 -p1
-#%patch2 -p1
+%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
@@ -111,17 +126,16 @@ export LC_ALL=en_US.utf8
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/yum/pluginconf.d,%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
-
 %{__make} install \
 	PYLIBDIR=%{py_scriptdir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # no cron (unstable, and poldek is main pkg manager)
-%{__rm} $RPM_BUILD_ROOT/etc/cron.daily/0yum.cron
-%{__rm} $RPM_BUILD_ROOT/etc/rc.d/init.d/yum-cron
-%{__rm} $RPM_BUILD_ROOT/etc/sysconfig/yum-cron
-%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-daily.yum
-%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-weekly.yum
+%{__rm} $RPM_BUILD_ROOT/etc/cron.daily/0yum-update.cron
+%{__rm} $RPM_BUILD_ROOT%{systemdunitdir}/yum-cron.service
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-cron.conf
+%{__rm} $RPM_BUILD_ROOT%{_sbindir}/yum-cron
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/man8/yum-cron.8*
 
 # for now, move repodir/yum.conf back
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/repos.d,/yum.repos.d}
@@ -139,8 +153,10 @@ touch $RPM_BUILD_ROOT/var/lib/yum/uuid
 %py_postclean %{_datadir}/yum-cli
 
 mv $RPM_BUILD_ROOT%{_localedir}/lt{_LT,}
-# duplicate with id
+# duplicate with id, nl and pt
 rm -r $RPM_BUILD_ROOT%{_localedir}/id_ID
+rm -r $RPM_BUILD_ROOT%{_localedir}/nl_NL
+rm -r $RPM_BUILD_ROOT%{_localedir}/pt_PT
 
 %find_lang %{name}
 
@@ -217,5 +233,7 @@ fi
 %dir /var/lib/yum/yumdb
 %ghost /var/lib/yum/uuid
 
-# bash-completion subpackage
-/etc/bash_completion.d/yum.bash
+%files -n bash-completion-%{name}
+%defattr(644,root,root,755)
+%{_datadir}/bash-completion/completions/yum
+%{_datadir}/bash-completion/completions/yummain.py
