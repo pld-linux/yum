@@ -8,7 +8,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	2.3
+Release:	3
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
@@ -73,6 +73,15 @@ automatically prompting the user as necessary.
 Yum to narzędzie sprawdzające i automatycznie ściągające i instalujące
 uaktualnione pakiety RPM. Zależności są ściągane automatycznie po
 zapytaniu użytkownika w razie potrzeby.
+
+%package -n bash-completion-%{name}
+Summary:	bash-completion for Yum
+Group:		Applications/Shells
+Requires:	%{name}
+Requires:	bash-completion >= 2.0
+
+%description -n bash-completion-%{name}
+bash-completion for Yum.
 
 %prep
 %setup -q
@@ -224,6 +233,7 @@ fi
 %dir /var/lib/yum/yumdb
 %ghost /var/lib/yum/uuid
 
-# bash-completion subpackage
+%files -n bash-completion-%{name}
+%defattr(644,root,root,755)
 %{_datadir}/bash-completion/completions/yum
 %{_datadir}/bash-completion/completions/yummain.py
