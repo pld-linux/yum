@@ -41,6 +41,7 @@ BuildRequires:	python-rpm
 BuildRequires:	python-urlgrabber
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
+BuildConflicts:	yum < 3.4.3-2.1
 %if %{with tests}
 BuildRequires:	python-nose
 BuildRequires:	yum-metadata-parser
