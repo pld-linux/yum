@@ -8,16 +8,17 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	2.2
+Release:	2.3
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
 # Source0-md5:	7c8ea8beba5b4e7fe0c215e4ebaa26ed
 Source1:	%{name}-pld-source.repo
 Source2:	%{name}-pld-ti-source.repo
-Patch1:		%{name}-obsoletes.patch
 # from util-vserver-*/contrib/
-#Patch2:		%{name}-chroot.patch # disabled for now. broken or not needed
+#Patch:		%{name}-chroot.patch # disabled for now. broken or not needed
+Patch1:		%{name}-obsoletes.patch
+Patch2:		cli-pyc.patch
 Patch3:		%{name}-pld.patch
 Patch4:		%{name}-amd64.patch
 Patch5:		%{name}-config.patch
@@ -84,7 +85,7 @@ zapytaniu użytkownika w razie potrzeby.
 %patch15 -p1
 # pld
 %patch1 -p1
-#%patch2 -p1
+%patch2 -p1
 %patch3 -p1
 %patch4 -p1
 %patch5 -p1
