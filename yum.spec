@@ -8,7 +8,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	2.1
+Release:	2.2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
@@ -143,8 +143,10 @@ touch $RPM_BUILD_ROOT/var/lib/yum/uuid
 %py_postclean %{_datadir}/yum-cli
 
 mv $RPM_BUILD_ROOT%{_localedir}/lt{_LT,}
-# duplicate with id
+# duplicate with id, nl and pt
 rm -r $RPM_BUILD_ROOT%{_localedir}/id_ID
+rm -r $RPM_BUILD_ROOT%{_localedir}/nl_NL
+rm -r $RPM_BUILD_ROOT%{_localedir}/pt_PT
 
 %find_lang %{name}
 
