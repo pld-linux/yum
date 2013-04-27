@@ -95,7 +95,6 @@ bash-completion for Yum.
 %patch14 -p1
 %patch15 -p1
 # pld
-%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -105,6 +104,7 @@ bash-completion for Yum.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch0 -p1
 
 %build
 %{__make}

@@ -37,14 +37,13 @@ Subject: [PATCH 2/5] If there is no RPMSENSE_PREREQ , just continue on
  yum/packages.py | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/yum/packages.py b/yum/packages.py
-index ee7e8bb..fcfab36 100644
---- a/yum/packages.py
-+++ b/yum/packages.py
-@@ -1142,6 +1142,8 @@ class YumHeaderPackage(YumAvailablePackage):
+--- yum-3.4.3/yum/packages.py	2013-04-27 18:25:45.901697548 +0300
++++ yum-rpm5/yum/packages.py	2013-04-15 08:46:43.772604716 +0300
+@@ -1523,6 +1523,9 @@
          # - that's what it is
          newflag = flag
          if flag is not None:
++            # If there is no RPMSENSE_PREREQ just return
 +            if not hasattr(rpm, 'RPMSENSE_PREREQ'):
 +                return 0
              newflag = flag & rpm.RPMSENSE_PREREQ
@@ -63,26 +62,28 @@ Subject: [PATCH 3/5] Workaround for the issue of idx.count() vs. for hdr in
  yum/config.py | 16 +++++++++++-----
  1 file changed, 11 insertions(+), 5 deletions(-)
 
-diff --git a/yum/config.py b/yum/config.py
-index ebe4b51..b4d98f7 100644
---- a/yum/config.py
-+++ b/yum/config.py
-@@ -846,14 +846,20 @@ def _getsysver(installroot, distroverpkg):
-     ts = rpmUtils.transaction.initReadOnlyTransaction(root=installroot)
-     ts.pushVSFlags(~(rpm._RPMVSF_NOSIGNATURES|rpm._RPMVSF_NODIGESTS))
-     idx = ts.dbMatch('provides', distroverpkg)
+--- yum-3.4.3/yum/config.py	2013-04-27 18:30:20.430303907 +0300
++++ yum-rpm5/yum/config.py	2013-04-15 08:46:43.769271228 +0300
+@@ -1166,18 +1015,22 @@
+     except rpm.error, e:
+         # This is the "new" code for "cannot open rpmdb", 4.8.0 ish
+         raise Errors.YumBaseError("Error: " + str(e))
 +
 +    # NK: The previous use if idx.count() did not work, as per rpmmi-py.c
 +    # comments, use 'for hdr in idx' method of gettind hdr instead
 +
 +    # set '$releasever' by default
 +    releasever = '$releasever'
++
      # we're going to take the first one - if there is more than one of these
      # then the user needs a beating
 -    if idx.count() == 0:
--        releasever = '$releasever'
+-        releasever = None
 -    else:
--        hdr = idx.next()
+-        try:
+-            hdr = idx.next()
+-        except StopIteration:
+-            raise Errors.YumBaseError("Error: rpmdb failed release provides. Try: rpm --rebuilddb")
 +    for hdr in idx:
          releasever = hdr['version']
 -        del hdr
@@ -93,6 +94,7 @@ index ebe4b51..b4d98f7 100644
      del idx
      del ts
      return releasever
+ 
 -- 
 1.8.2.1
 
@@ -141,12 +143,10 @@ We may get microseconds back aswell, treat them properly
  cli.py | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/cli.py b/cli.py
-index 0374667..8bf29ee 100644
---- a/cli.py
-+++ b/cli.py
-@@ -207,7 +207,10 @@ class YumBaseCli(yum.YumBase, output.YumOutput):
-                          'yum-rhn-plugin']
+--- yum-3.4.3/cli.py	2013-04-27 18:33:42.852536274 +0300
++++ yum-rpm5/cli.py	2013-04-27 18:35:07.106267113 +0300
+@@ -310,7 +310,10 @@
+             yum_progs = self.run_with_package_names
              done = False
              def sm_ui_time(x):
 -                return time.strftime("%Y-%m-%d %H:%M", time.gmtime(x))
@@ -154,9 +154,6 @@ index 0374667..8bf29ee 100644
 +                    return time.strftime("%Y-%m-%d %H:%M", time.gmtime(x[0]))
 +                else:
 +                    return time.strftime("%Y-%m-%d %H:%M", time.gmtime(x))
+             def sm_ui_date(x): # For changelogs, there is no time
+                 return time.strftime("%Y-%m-%d", time.gmtime(x))
              for pkg in sorted(self.rpmdb.returnPackages(patterns=yum_progs)):
-                 # We should only have 1 version of each...
-                 if done: print ""
--- 
-1.8.2.1
-
