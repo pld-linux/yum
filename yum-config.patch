@@ -1,6 +1,6 @@
 --- yum-3.2.25/etc/yum.conf~	2010-02-03 01:12:22.209166983 +0200
 +++ yum-3.2.25/etc/yum.conf	2010-01-17 23:43:43.968036823 +0200
-@@ -1,11 +1,24 @@
+@@ -1,11 +1,25 @@
  [main]
 -cachedir=/var/cache/yum
 -keepcache=1
@@ -11,6 +11,7 @@
  exactarch=1
 -obsoletes=0
 +obsoletes=0
++history_record=0
 +gpgcheck=0
 +plugins=1
 +installonly_limit=3
