@@ -63,6 +63,7 @@ Requires:	python-sqlite
 Requires:	python-urlgrabber >= 1:3.9.1
 Requires:	rpm >= 4.5
 Requires:	yum-metadata-parser >= 1.1.4
+Obsoletes:	yum-plugin-security < 1.1.32
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
