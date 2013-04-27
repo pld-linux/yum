@@ -8,7 +8,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	5.8
+Release:	6
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
@@ -32,7 +32,7 @@ Patch12:	%{name}-missingok.patch
 Patch13:	%{name}-info-no-size.patch
 # fc
 Patch100:	%{name}-HEAD.patch
-# Patch100-md5:	fed00a3fcdb2ab0115bf8e1949309763
+# Patch100-md5:	e9eff22b1a68e83b271bdec261411648
 Patch101:	installonlyn-enable.patch
 Patch102:	%{name}-manpage-files.patch
 Patch103:	no-more-exactarchlist.patch
@@ -140,9 +140,11 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/yum/pluginconf.d,%{_libdir}/yum-plugin
 	DESTDIR=$RPM_BUILD_ROOT
 
 # no cron (unstable, and poldek is main pkg manager)
-%{__rm} $RPM_BUILD_ROOT/etc/cron.daily/0yum-update.cron
+%{__rm} $RPM_BUILD_ROOT/etc/cron.daily/0yum-daily.cron
+%{__rm} $RPM_BUILD_ROOT/etc/cron.hourly/0yum-hourly.cron
 %{__rm} $RPM_BUILD_ROOT%{systemdunitdir}/yum-cron.service
 %{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-cron.conf
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-cron-hourly.conf
 %{__rm} $RPM_BUILD_ROOT%{_sbindir}/yum-cron
 %{__rm} $RPM_BUILD_ROOT%{_mandir}/man8/yum-cron.8*
 
