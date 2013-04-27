@@ -59,7 +59,7 @@ Requires:	python-pygpgme
 Requires:	python-rpm
 Requires:	python-sqlite
 Requires:	python-urlgrabber >= 1:3.9.1
-Requires:	rpm >= 4.4.2
+Requires:	rpm >= 5.4.10-50
 Requires:	yum-metadata-parser >= 1.1.4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
