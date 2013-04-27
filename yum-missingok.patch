@@ -1,47 +1,34 @@
-diff -ur yum-3.2.0/rpmUtils/miscutils.py yum-3.2.0-new/rpmUtils/miscutils.py
---- yum-3.2.0/rpmUtils/miscutils.py	2007-04-08 05:56:54.000000000 +0200
-+++ yum-3.2.0-new/rpmUtils/miscutils.py	2007-05-26 21:06:18.961805690 +0200
-@@ -299,6 +299,8 @@
-     return s
+--- yum-3.4.3/rpmUtils/miscutils.py	2011-06-28 23:27:22.000000000 +0300
++++ yum-3.4.3/rpmUtils/miscutils.py	2013-04-27 22:33:20.000000000 +0300
+@@ -377,6 +377,9 @@
+ 
      
  def flagToString(flags):
-+    if flags & (1 << 19): return ('MISSINGOK', flagToString(flags & 0xf))
++    if flags & rpm.RPMSENSE_MISSINGOK:
++        return ('MISSINGOK', flagToString(flags & 0xf))
 +
      flags = flags & 0xf
  
      if flags == 0: return None
-diff -ur yum-3.2.0/yum/packages.py yum-3.2.0-new/yum/packages.py
---- yum-3.2.0/yum/packages.py	2007-04-26 00:19:28.000000000 +0200
-+++ yum-3.2.0-new/yum/packages.py	2007-05-26 21:06:18.951806377 +0200
-@@ -694,6 +695,11 @@
-             prcotype = tag2prco[tag]
-             if name is not None:
-                 self.prco[prcotype] = zip(name, flag, vers)
-+                for dep in self.prco[prcotype]:
-+                    if type(dep[1]) is tuple and dep[1][0] == 'MISSINGOK':
-+                        self.prco[prcotype].remove(dep)
-+                        dep = (dep[0], dep[1][1], dep[2])
-+                        self.prco[prcotype].append(dep)
+--- yum-3.4.3/yum/packages.py	2013-04-27 22:39:39.544678577 +0300
++++ yum-3.4.3/yum/packages.py	2013-04-27 22:33:23.000000000 +0300
+@@ -1418,6 +1419,7 @@
+                 # installed. So we need to mark those deps. as "weak".
+                 bits = rpm.RPMSENSE_SCRIPT_PRE | rpm.RPMSENSE_SCRIPT_POST
+                 weakreqs = [bool(flag & bits) for flag in lst]
++                suggests =  [bool(flag & rpm.RPMSENSE_MISSINGOK) for flag in lst]
+             flag = map(rpmUtils.miscutils.flagToString, lst)
+             flag = map(misc.share_data, flag)
+ 
+@@ -1430,8 +1432,11 @@
+             self.prco[prcotype] = map(misc.share_data, zip(name,flag,vers))
+             if tag == 'REQUIRE':
+                 weakreqs = zip(weakreqs, self.prco[prcotype])
++                suggests = zip(suggests, self.prco[prcotype])
+                 strongreqs = [wreq[1] for wreq in weakreqs if not wreq[0]]
++                strongreqs = [wreq[1] for wreq in suggests if not wreq[0]]
+                 self.prco['strong_requires'] = strongreqs
++                self.prco['suggests'] = suggests
      
      def tagByName(self, tag):
          warnings.warn("tagByName() will go away in a furture version of Yum.\n",
-diff -ur yum-3.2.0/yum/sqlitesack.py yum-3.2.0-new/yum/sqlitesack.py
---- yum-3.2.0/yum/sqlitesack.py	2007-04-25 20:55:36.000000000 +0200
-+++ yum-3.2.0-new/yum/sqlitesack.py	2007-05-26 21:06:18.951806377 +0200
-@@ -189,5 +191,13 @@
-             executeSQL(cur, query)
-             self.prco[prcotype] = [ ]
-             for ob in cur:
--                prco_set = (ob['name'], ob['flags'], 
-+                fl = ob['flags']
-+                if fl:
-+                    fl = fl.split(',')
-+                    if 'MISSINGOK' in fl:
-+                        fl.remove('MISSINGOK')
-+                        fl = ','.join(fl)
-+                        if not fl:
-+                            fl = None
-+                prco_set = (ob['name'], fl, 
-                             (ob['epoch'], ob['version'], ob['release']))
-                 # This saves memory by merging the prco data from multiple
-                 # packages. Note that flags etc. need to be the same too.
