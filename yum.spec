@@ -8,7 +8,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	5.3
+Release:	5.6
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
@@ -57,10 +57,10 @@ Requires:	python >= 1:2.5
 Requires:	python-iniparse
 Requires:	python-libxml2
 Requires:	python-pygpgme
-Requires:	python-rpm
+Requires:	python-rpm >= 5.4.10-50
 Requires:	python-sqlite
 Requires:	python-urlgrabber >= 1:3.9.1
-Requires:	rpm >= 5.4.10-50
+Requires:	rpm >= 4.5
 Requires:	yum-metadata-parser >= 1.1.4
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
