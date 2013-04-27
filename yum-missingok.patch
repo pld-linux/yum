@@ -1,0 +1,47 @@
+diff -ur yum-3.2.0/rpmUtils/miscutils.py yum-3.2.0-new/rpmUtils/miscutils.py
+--- yum-3.2.0/rpmUtils/miscutils.py	2007-04-08 05:56:54.000000000 +0200
++++ yum-3.2.0-new/rpmUtils/miscutils.py	2007-05-26 21:06:18.961805690 +0200
+@@ -299,6 +299,8 @@
+     return s
+     
+ def flagToString(flags):
++    if flags & (1 << 19): return ('MISSINGOK', flagToString(flags & 0xf))
++
+     flags = flags & 0xf
+ 
+     if flags == 0: return None
+diff -ur yum-3.2.0/yum/packages.py yum-3.2.0-new/yum/packages.py
+--- yum-3.2.0/yum/packages.py	2007-04-26 00:19:28.000000000 +0200
++++ yum-3.2.0-new/yum/packages.py	2007-05-26 21:06:18.951806377 +0200
+@@ -694,6 +695,11 @@
+             prcotype = tag2prco[tag]
+             if name is not None:
+                 self.prco[prcotype] = zip(name, flag, vers)
++                for dep in self.prco[prcotype]:
++                    if type(dep[1]) is tuple and dep[1][0] == 'MISSINGOK':
++                        self.prco[prcotype].remove(dep)
++                        dep = (dep[0], dep[1][1], dep[2])
++                        self.prco[prcotype].append(dep)
+     
+     def tagByName(self, tag):
+         warnings.warn("tagByName() will go away in a furture version of Yum.\n",
+diff -ur yum-3.2.0/yum/sqlitesack.py yum-3.2.0-new/yum/sqlitesack.py
+--- yum-3.2.0/yum/sqlitesack.py	2007-04-25 20:55:36.000000000 +0200
++++ yum-3.2.0-new/yum/sqlitesack.py	2007-05-26 21:06:18.951806377 +0200
+@@ -189,5 +191,13 @@
+             executeSQL(cur, query)
+             self.prco[prcotype] = [ ]
+             for ob in cur:
+-                prco_set = (ob['name'], ob['flags'], 
++                fl = ob['flags']
++                if fl:
++                    fl = fl.split(',')
++                    if 'MISSINGOK' in fl:
++                        fl.remove('MISSINGOK')
++                        fl = ','.join(fl)
++                        if not fl:
++                            fl = None
++                prco_set = (ob['name'], fl, 
+                             (ob['epoch'], ob['version'], ob['release']))
+                 # This saves memory by merging the prco data from multiple
+                 # packages. Note that flags etc. need to be the same too.
