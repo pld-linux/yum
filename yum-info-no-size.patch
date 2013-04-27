@@ -1,0 +1,11 @@
+--- yum-3.4.3/output.py	2013-04-27 22:42:25.241826823 +0300
++++ yum-3.4.3/output.py	2013-04-27 23:10:51.000000000 +0300
+@@ -819,7 +819,7 @@
+             print _("Epoch       : %s") % to_unicode(pkg.epoch)
+         print _("Version     : %s") % to_unicode(pkg.version)
+         print _("Release     : %s") % to_unicode(pkg.release)
+-        print _("Size        : %s") % self.format_number(float(pkg.size))
++        print _("Size        : %s") % self.format_number(float(pkg.size if pkg.size else 0))
+         print _("Repo        : %s") % to_unicode(pkg.repo.ui_id)
+         if pkg.repoid == 'installed' and 'from_repo' in pkg.yumdb_info:
+             print _("From repo   : %s") % to_unicode(pkg.yumdb_info.from_repo)
