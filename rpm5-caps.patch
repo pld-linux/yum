@@ -1,0 +1,69 @@
+--- yum-3.4.3/yum/rpmsack.py~	2013-04-27 19:07:08.000000000 +0300
++++ yum-3.4.3/yum/rpmsack.py	2013-04-27 21:23:41.465353198 +0300
+@@ -1539,6 +1539,7 @@
+         for pkg in sorted(pkgs): # The sort here is mainly for "UI"
+             for rreq in pkg.strong_requires:
+                 if rreq[0].startswith('rpmlib'): continue
++                if rreq[0].startswith('uname') or rreq[0].startswith('cpuinfo'): continue
+                 if rreq in providers:            continue
+ 
+                 (req, flags, ver) = rreq
+@@ -1552,6 +1553,7 @@
+ 
+             for creq in pkg.conflicts:
+                 if creq[0].startswith('rpmlib'): continue
++                if creq[0].startswith('uname') or creq[0].startswith('cpuinfo'): continue
+ 
+                 (req, flags, ver) = creq
+                 res = self.getProvides(req, flags, ver)
+--- yum-3.4.3/yum/depsolve.py~	2013-04-27 19:07:08.000000000 +0300
++++ yum-3.4.3/yum/depsolve.py	2013-04-27 21:24:25.387285413 +0300
+@@ -1060,6 +1060,8 @@
+         for req in sorted(txmbr_reqs, key=self._sort_req_key):
+             if req[0].startswith('rpmlib('):
+                 continue
++            if req[0].startswith('uname(') or req[0].startswith('cpuinfo(') :
++                continue
+             if req in oldreqs:
+                 continue
+             
+@@ -1100,6 +1102,8 @@
+         for prov in provs:
+             if prov[0].startswith('rpmlib('): # ignore rpmlib() provides
+                 continue
++            if prov[0].startswith('uname(') or prov[0].startswith('cpuinfo('): # ignore uname() provides
++                continue
+             if prov in newpoprovs:
+                 continue
+             # FIXME: This is probably the best place to fix the postfix rename
+--- yum-3.4.3/yum/__init__.py~	2013-04-27 19:07:08.000000000 +0300
++++ yum-3.4.3/yum/__init__.py	2013-04-27 21:25:39.940564402 +0300
+@@ -2924,6 +2924,8 @@
+                 (r,f,v) = req
+                 if r.startswith('rpmlib('):
+                     continue
++                if r.startswith('uname(') or r.startswith('cpuinfo('):
++                    continue
+                 
+                 satisfiers = []
+ 
+@@ -6292,6 +6292,8 @@
+             for msg in msgs:
+                 if msg.startswith('rpmlib('):
+                     continue
++                if msg.startswith('uname(') or msg.startswith('cpuinfo('):
++                    continue
+                 rpmlib_only = False
+             if rpmlib_only:
+                 retmsgs = [_("ERROR You need to update rpm to handle:")]
+--- yum-3.4.3/yum/packages.py~	2013-04-27 19:07:08.000000000 +0300
++++ yum-3.4.3/yum/packages.py	2013-04-27 21:27:09.434499539 +0300
+@@ -1239,6 +1239,8 @@
+         for (name, flags, (e,v,r),pre) in sorted(mylist):
+             if name.startswith('rpmlib('):
+                 continue
++            if name.startswith('uname(') or name.startswith('cpuinfo('):
++                continue
+             # this drops out requires that the pkg provides for itself.
+             if name in self.provides_names or \
+                     (name.startswith('/') and \

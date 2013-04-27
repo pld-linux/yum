@@ -8,7 +8,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	5
+Release:	5.2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
@@ -27,6 +27,7 @@ Patch7:		rpm5.patch
 Patch8:		tests.patch
 Patch9:		pld-release.patch
 Patch10:	rpm5-%{name}.patch
+Patch11:	rpm5-caps.patch
 # fc
 Patch100:	%{name}-HEAD.patch
 # Patch100-md5:	fed00a3fcdb2ab0115bf8e1949309763
@@ -105,6 +106,7 @@ bash-completion for Yum.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
+%patch11 -p1
 
 %build
 %{__make}
