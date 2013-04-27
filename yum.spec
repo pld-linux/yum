@@ -17,7 +17,6 @@ Source1:	%{name}-pld-source.repo
 Source2:	%{name}-pld-ti-source.repo
 # from util-vserver-*/contrib/
 #Patch:		%{name}-chroot.patch # disabled for now. broken or not needed
-Patch0:		rpm5-yum.patch
 Patch1:		%{name}-obsoletes.patch
 Patch2:		cli-pyc.patch
 Patch3:		%{name}-pld.patch
@@ -27,14 +26,15 @@ Patch6:		nosetests.patch
 Patch7:		rpm5.patch
 Patch8:		tests.patch
 Patch9:		pld-release.patch
+Patch10:	rpm5-%{name}.patch
 # fc
-Patch10:	%{name}-HEAD.patch
-# Patch10-md5:	fed00a3fcdb2ab0115bf8e1949309763
-Patch11:	installonlyn-enable.patch
-Patch12:	%{name}-manpage-files.patch
-Patch13:	no-more-exactarchlist.patch
-Patch14:	%{name}-completion-helper.patch
-Patch15:	%{name}-distro-configs.patch
+Patch100:	%{name}-HEAD.patch
+# Patch100-md5:	fed00a3fcdb2ab0115bf8e1949309763
+Patch101:	installonlyn-enable.patch
+Patch102:	%{name}-manpage-files.patch
+Patch103:	no-more-exactarchlist.patch
+Patch104:	%{name}-completion-helper.patch
+Patch105:	%{name}-distro-configs.patch
 URL:		http://yum.baseurl.org/
 BuildRequires:	bash-completion >= 2.0
 BuildRequires:	gettext-devel
@@ -88,12 +88,12 @@ bash-completion for Yum.
 %prep
 %setup -q
 # fc
-%patch10 -p1
-%patch11 -p0
-%patch12 -p1
-%patch13 -p0
-%patch14 -p1
-%patch15 -p1
+%patch100 -p1
+%patch101 -p0
+%patch102 -p1
+%patch103 -p0
+%patch104 -p1
+%patch105 -p1
 # pld
 %patch1 -p1
 %patch2 -p1
@@ -104,7 +104,7 @@ bash-completion for Yum.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
-%patch0 -p1
+%patch10 -p1
 
 %build
 %{__make}
