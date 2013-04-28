@@ -4,11 +4,12 @@
 
 # TODO
 # - PLDize (or drop) /etc/yum/version-groups.conf
+%define	rpm_ver 5.4.10-50
 Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	6
+Release:	7
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
@@ -42,7 +43,7 @@ URL:		http://yum.baseurl.org/
 BuildRequires:	bash-completion >= 2.0
 BuildRequires:	gettext-devel
 BuildRequires:	intltool
-BuildRequires:	python-rpm
+BuildRequires:	python-rpm >= %{rpm_ver}
 BuildRequires:	python-urlgrabber
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.228
@@ -58,10 +59,11 @@ Requires:	python >= 1:2.5
 Requires:	python-iniparse
 Requires:	python-libxml2
 Requires:	python-pygpgme
-Requires:	python-rpm >= 5.4.10-50
+Requires:	python-rpm >=  %{rpm_ver}
+Requires:	rpm >= %{rpm_ver}
 Requires:	python-sqlite
 Requires:	python-urlgrabber >= 1:3.9.1
-Requires:	rpm >= 4.5
+Requires:	rpm >= %{rpm_ver}
 Requires:	yum-metadata-parser >= 1.1.4
 Obsoletes:	yum-plugin-security < 1.1.32
 BuildArch:	noarch

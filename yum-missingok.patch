@@ -10,17 +10,27 @@
      flags = flags & 0xf
  
      if flags == 0: return None
---- yum-3.4.3/yum/packages.py	2013-04-27 22:39:39.544678577 +0300
-+++ yum-3.4.3/yum/packages.py	2013-04-27 22:33:23.000000000 +0300
-@@ -1418,6 +1419,7 @@
+--- yum-3.4.3/yum/packages.py	2013-04-28 12:10:15.669276249 +0300
++++ yum-3.4.3/yum/packages.py	2013-04-28 12:22:29.169904420 +0300
+@@ -1257,6 +1257,9 @@
+                         continue
+             prcostring = '''      <rpm:entry name="%s"''' % misc.to_xml(name, attrib=True)
+             if flags:
++                # skip suggests
++                if flags[0] == 'MISSINGOK':
++                    continue
+                 prcostring += ''' flags="%s"''' % misc.to_xml(flags, attrib=True)
+                 if e:
+                     prcostring += ''' epoch="%s"''' % misc.to_xml(e, attrib=True)
+@@ -1422,6 +1425,7 @@
                  # installed. So we need to mark those deps. as "weak".
                  bits = rpm.RPMSENSE_SCRIPT_PRE | rpm.RPMSENSE_SCRIPT_POST
                  weakreqs = [bool(flag & bits) for flag in lst]
-+                suggests =  [bool(flag & rpm.RPMSENSE_MISSINGOK) for flag in lst]
++                suggests = [bool(flag & rpm.RPMSENSE_MISSINGOK) for flag in lst]
              flag = map(rpmUtils.miscutils.flagToString, lst)
              flag = map(misc.share_data, flag)
  
-@@ -1430,8 +1432,11 @@
+@@ -1434,8 +1438,11 @@
              self.prco[prcotype] = map(misc.share_data, zip(name,flag,vers))
              if tag == 'REQUIRE':
                  weakreqs = zip(weakreqs, self.prco[prcotype])
