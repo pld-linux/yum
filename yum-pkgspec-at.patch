@@ -1,0 +1,26 @@
+--- site-packages/yum/__init__.py~	2013-05-18 11:39:40.000000000 +0300
++++ site-packages/yum/__init__.py	2013-05-18 11:39:43.178065996 +0300
+@@ -6745,7 +6745,10 @@
+             elif k in ('updated_by', 'obsoleted_by', 'downgraded_by', 
+                        'downgrades', 'updates', 'obsoletes', 'depends_on'):
+                 for pkgspec in v.strip().split(' '):
+-                    pkgtup, origin  = pkgspec.split('@')
++                    # PLD kernel addon packages use '@' as part of RELEASE tag
++                    parts = pkgspec.split('@')
++                    pkgtup = '@'.join(parts[:-1])
++                    origin = '@'.join(parts[-1:])
+                     try:
+                         if origin == 'i':
+                             po = self.getInstalledPackageObject(tuple(pkgtup.split(',')))
+@@ -6762,7 +6765,10 @@
+             elif k in ('relatedto'):
+                 for item in v.split(' '):
+                     pkgspec, rel = item.split(':')
+-                    pkgtup,origin = pkgspec.split('@')
++                    # PLD kernel addon packages use '@' as part of RELEASE tag
++                    parts = pkgspec.split('@')
++                    pkgtup = '@'.join(parts[:-1])
++                    origin = '@'.join(parts[-1:])
+                     try:
+                         if origin == 'i':
+                             po = self.getInstalledPackageObject(tuple(pkgtup.split(',')))

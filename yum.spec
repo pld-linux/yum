@@ -36,6 +36,7 @@ Patch10:	rpm5-%{name}.patch
 Patch11:	rpm5-caps.patch
 Patch12:	%{name}-missingok.patch
 Patch13:	%{name}-info-no-size.patch
+Patch14:	%{name}-pkgspec-at.patch
 # fc
 Patch100:	%{name}-HEAD.patch
 # Patch100-md5:	e9eff22b1a68e83b271bdec261411648
@@ -64,8 +65,7 @@ Requires:	python >= 1:2.5
 Requires:	python-iniparse
 Requires:	python-libxml2
 Requires:	python-pygpgme
-Requires:	python-rpm >=  %{rpm_ver}
-Requires:	rpm >= %{rpm_ver}
+Requires:	python-rpm >= %{rpm_ver}
 Requires:	python-sqlite
 Requires:	python-urlgrabber >= 1:3.9.1
 Requires:	rpm >= %{rpm_ver}
@@ -119,6 +119,7 @@ bash-completion for Yum.
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
+%patch14 -p1
 
 %build
 %{__make}
