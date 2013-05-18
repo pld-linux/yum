@@ -1,3 +1,8 @@
+# TODO
+# - handle looking up implicit directory dependencies
+#   http://git.pld-linux.org/?p=packages/rpm-whiteout.git;a=commitdiff;h=41210229710e3417017c97297e4b9d7278d4c415
+#   http://git.pld-linux.org/?p=packages/systemd.git;a=commitdiff;h=60c3e1b7a372cc929a0ef70da372504584b92623
+#   http://git.pld-linux.org/?p=packages/polkit.git;a=commitdiff;h=368d6c5e9e16354ce89a7fd940bacf78c9b0a90f
 #
 # Conditional build:
 %bcond_without	tests		# build without tests
@@ -223,21 +228,18 @@ fi
 %dir %{_sysconfdir}/yum/vars
 
 %attr(755,root,root) %{_bindir}/yum
-
-%dir %{py_sitescriptdir}/yum
-%dir %{_datadir}/yum-cli
-%{_datadir}/yum-cli/*.py[co]
-
-%{py_sitescriptdir}/yum/*.py[co]
-%dir %{py_sitescriptdir}/rpmUtils
-%{py_sitescriptdir}/rpmUtils/*.py[co]
-
-%dir %{_libdir}/yum-plugins
-%dir %{_datadir}/yum-plugins
-
 %{_mandir}/man5/yum.conf.5*
 %{_mandir}/man8/yum-shell.8*
 %{_mandir}/man8/yum.8*
+
+%dir %{_datadir}/yum-cli
+%{_datadir}/yum-cli/*.py*
+
+%{py_sitescriptdir}/yum
+%{py_sitescriptdir}/rpmUtils
+
+%dir %{_libdir}/yum-plugins
+%dir %{_datadir}/yum-plugins
 
 %dir /var/cache/yum
 
