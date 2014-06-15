@@ -52,52 +52,6 @@ Subject: [PATCH 2/5] If there is no RPMSENSE_PREREQ , just continue on
 -- 
 1.8.2.1
 
-From 01acc94570b866a06de0f143ee8392ca3cfd08aa Mon Sep 17 00:00:00 2001
-From: Nigel Kukard <nkukard@lbsd.net>
-Date: Tue, 1 Feb 2011 07:28:17 +0000
-Subject: [PATCH 3/5] Workaround for the issue of idx.count() vs. for hdr in
- idx
-
----
- yum/config.py | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
---- yum-3.4.3/yum/config.py	2013-04-27 18:30:20.430303907 +0300
-+++ yum-rpm5/yum/config.py	2013-04-15 08:46:43.769271228 +0300
-@@ -1166,18 +1015,22 @@
-     except rpm.error, e:
-         # This is the "new" code for "cannot open rpmdb", 4.8.0 ish
-         raise Errors.YumBaseError("Error: " + str(e))
-+
-+    # NK: The previous use if idx.count() did not work, as per rpmmi-py.c
-+    # comments, use 'for hdr in idx' method of gettind hdr instead
-+
-+    # set '$releasever' by default
-+    releasever = '$releasever'
-+
-     # we're going to take the first one - if there is more than one of these
-     # then the user needs a beating
--    if idx.count() == 0:
--        releasever = None
--    else:
--        try:
--            hdr = idx.next()
--        except StopIteration:
--            raise Errors.YumBaseError("Error: rpmdb failed release provides. Try: rpm --rebuilddb")
-+    for hdr in idx:
-         releasever = hdr['version']
--        del hdr
-+        break
-+
-+    # /NK
-+
-     del idx
-     del ts
-     return releasever
- 
--- 
-1.8.2.1
-
 From 80e24f1607e19edada799bee1ed609a3b173c288 Mon Sep 17 00:00:00 2001
 From: Nigel Kukard <nkukard@lbsd.net>
 Date: Tue, 1 Feb 2011 17:55:29 +0000

@@ -14,7 +14,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	7
+Release:	8
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
@@ -39,7 +39,7 @@ Patch13:	%{name}-info-no-size.patch
 Patch14:	%{name}-pkgspec-at.patch
 # fc
 Patch100:	%{name}-HEAD.patch
-# Patch100-md5:	e9eff22b1a68e83b271bdec261411648
+# Patch100-md5:	4523cba9793fabb2d4b922b911701024
 Patch101:	installonlyn-enable.patch
 Patch102:	%{name}-manpage-files.patch
 Patch103:	no-more-exactarchlist.patch
@@ -102,7 +102,7 @@ bash-completion for Yum.
 %patch100 -p1
 %patch101 -p0
 %patch102 -p1
-%patch103 -p0
+%patch103 -p1
 %patch104 -p1
 %patch105 -p1
 # pld
@@ -144,18 +144,22 @@ export LC_ALL=en_US.utf8
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/yum/pluginconf.d,%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
-%{__make} install \
+%{__make} install -j1 \
+	INIT=systemd \
+	UNITDIR=%{systemdunitdir} \
 	PYLIBDIR=%{py_scriptdir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # no cron (unstable, and poldek is main pkg manager)
-%{__rm} $RPM_BUILD_ROOT/etc/cron.daily/0yum-daily.cron
-%{__rm} $RPM_BUILD_ROOT/etc/cron.hourly/0yum-hourly.cron
-%{__rm} $RPM_BUILD_ROOT%{systemdunitdir}/yum-cron.service
-%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-cron.conf
-%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-cron-hourly.conf
-%{__rm} $RPM_BUILD_ROOT%{_sbindir}/yum-cron
 %{__rm} $RPM_BUILD_ROOT%{_mandir}/man8/yum-cron.8*
+%{__rm} $RPM_BUILD_ROOT%{_sbindir}/yum-cron
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-cron-hourly.conf
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-cron-security.conf
+%{__rm} $RPM_BUILD_ROOT%{_sysconfdir}/yum/yum-cron.conf
+%{__rm} $RPM_BUILD_ROOT%{systemdunitdir}/yum-cron.service
+%{__rm} $RPM_BUILD_ROOT/etc/cron.daily/0yum-daily.cron
+%{__rm} $RPM_BUILD_ROOT/etc/cron.daily/0yum-security.cron
+%{__rm} $RPM_BUILD_ROOT/etc/cron.hourly/0yum-hourly.cron
 
 # for now, move repodir/yum.conf back
 mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/repos.d,/yum.repos.d}
@@ -252,5 +256,5 @@ fi
 
 %files -n bash-completion-%{name}
 %defattr(644,root,root,755)
-%{_datadir}/bash-completion/completions/yum
-%{_datadir}/bash-completion/completions/yummain.py
+%{bash_compdir}/yum
+%{bash_compdir}/yummain.py

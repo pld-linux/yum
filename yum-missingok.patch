@@ -10,8 +10,8 @@
      flags = flags & 0xf
  
      if flags == 0: return None
---- yum-3.4.3/yum/packages.py	2013-04-28 12:10:15.669276249 +0300
-+++ yum-3.4.3/yum/packages.py	2013-04-28 12:22:29.169904420 +0300
+--- yum-3.4.3/yum/packages.py~	2014-06-14 17:29:50.000000000 +0300
++++ yum-3.4.3/yum/packages.py	2014-06-14 17:34:50.475763987 +0300
 @@ -1257,6 +1257,9 @@
                          continue
              prcostring = '''      <rpm:entry name="%s"''' % misc.to_xml(name, attrib=True)
@@ -22,23 +22,22 @@
                  prcostring += ''' flags="%s"''' % misc.to_xml(flags, attrib=True)
                  if e:
                      prcostring += ''' epoch="%s"''' % misc.to_xml(e, attrib=True)
-@@ -1422,6 +1425,7 @@
-                 # installed. So we need to mark those deps. as "weak".
+@@ -1464,14 +1464,18 @@
+                 #  This is not the same as recommends/weak_requires.
                  bits = rpm.RPMSENSE_SCRIPT_PRE | rpm.RPMSENSE_SCRIPT_POST
                  weakreqs = [bool(flag & bits) for flag in lst]
 +                suggests = [bool(flag & rpm.RPMSENSE_MISSINGOK) for flag in lst]
-             flag = map(rpmUtils.miscutils.flagToString, lst)
-             flag = map(misc.share_data, flag)
  
-@@ -1434,8 +1438,11 @@
-             self.prco[prcotype] = map(misc.share_data, zip(name,flag,vers))
+             vers = hdr[getattr(rpm, 'RPMTAG_%sVERSION' % tag)]
+             prcotype = tag2prco[tag]
+             self.prco[prcotype] = _end_nfv(name, lst, vers)
              if tag == 'REQUIRE':
                  weakreqs = zip(weakreqs, self.prco[prcotype])
 +                suggests = zip(suggests, self.prco[prcotype])
                  strongreqs = [wreq[1] for wreq in weakreqs if not wreq[0]]
-+                strongreqs = [wreq[1] for wreq in suggests if not wreq[0]]
++                suggestreqs = [wreq[1] for wreq in suggests if not wreq[0]]
                  self.prco['strong_requires'] = strongreqs
-+                self.prco['suggests'] = suggests
-     
-     def tagByName(self, tag):
-         warnings.warn("tagByName() will go away in a furture version of Yum.\n",
++                self.prco['suggests'] = suggestreqs
+ 
+         # This looks horrific as we are supporting both the old and new formats:
+         tag2prco = { "SUGGEST":    ( misc.share_data("suggests"),

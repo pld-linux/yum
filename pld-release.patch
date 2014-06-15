@@ -1,11 +1,11 @@
---- yum-3.4.3/yum/config.py~	2013-03-02 21:24:45.000000000 +0200
-+++ yum-3.4.3/yum/config.py	2013-03-03 18:30:14.106276193 +0200
-@@ -612,7 +612,7 @@
-     debuglevel = IntOption(2, 0, 10)
+--- yum-3.4.3/yum/config.py~	2014-06-14 16:51:52.000000000 +0300
++++ yum-3.4.3/yum/config.py	2014-06-14 17:09:54.264341309 +0300
+@@ -719,7 +719,7 @@
+     debuglevel = IntOption(2, -4, 10)
      errorlevel = IntOption(2, 0, 10)
  
--    distroverpkg = Option('redhat-release')
-+    distroverpkg = Option('pld-release')
+-    distroverpkg = ListOption(['system-release(releasever)', 'redhat-release'])
++    distroverpkg = ListOption(['system-release(releasever)', 'pld-release'])
      installroot = Option('/')
      config_file_path = Option('/etc/yum/yum.conf')
      plugins = BoolOption(False)
