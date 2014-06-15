@@ -37,6 +37,7 @@ Patch11:	rpm5-caps.patch
 Patch12:	%{name}-missingok.patch
 Patch13:	%{name}-info-no-size.patch
 Patch14:	%{name}-pkgspec-at.patch
+Patch15:	emptyfields.patch
 # fc
 Patch100:	%{name}-HEAD.patch
 # Patch100-md5:	4523cba9793fabb2d4b922b911701024
@@ -120,6 +121,7 @@ bash-completion for Yum.
 %patch12 -p1
 %patch13 -p1
 %patch14 -p1
+%patch15 -p1
 
 %build
 %{__make}

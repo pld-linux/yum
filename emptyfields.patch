@@ -1,0 +1,11 @@
+--- ./yum/history.py~	2014-06-15 14:51:33.000000000 +0300
++++ ./yum/history.py	2014-06-15 15:11:19.973171388 +0300
+@@ -1317,7 +1317,7 @@
+             there is no data currently. """
+         for attr in YumHistoryPackage._valid_rpmdb_keys:
+             val = getattr(ipkg, attr, None)
+-            if val is None:
++            if val is None or val == []:
+                 continue
+             if not self._save_anydb_key(ipkg, "rpm", attr, val):
+                 return False
