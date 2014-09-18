@@ -14,7 +14,7 @@ Summary:	RPM installer/updater
 Summary(pl.UTF-8):	Narzędzie do instalowania/uaktualniania pakietów RPM
 Name:		yum
 Version:	3.4.3
-Release:	8
+Release:	9
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://yum.baseurl.org/download/3.4/%{name}-%{version}.tar.gz
@@ -40,7 +40,7 @@ Patch14:	%{name}-pkgspec-at.patch
 Patch15:	emptyfields.patch
 # fc
 Patch100:	%{name}-HEAD.patch
-# Patch100-md5:	4523cba9793fabb2d4b922b911701024
+# Patch100-md5:	f53a297818b71da862eed4b7401e008e
 Patch101:	installonlyn-enable.patch
 Patch102:	%{name}-manpage-files.patch
 Patch103:	no-more-exactarchlist.patch
