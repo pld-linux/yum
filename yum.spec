@@ -48,7 +48,7 @@ Patch104:	%{name}-completion-helper.patch
 Patch105:	%{name}-distro-configs.patch
 URL:		http://yum.baseurl.org/
 BuildRequires:	bash-completion >= 2.0
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	intltool
 BuildRequires:	python-rpm >= %{rpm_ver}
 BuildRequires:	python-urlgrabber
