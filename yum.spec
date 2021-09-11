@@ -90,9 +90,8 @@ zapytaniu użytkownika w razie potrzeby.
 %package -n bash-completion-%{name}
 Summary:	bash-completion for Yum
 Group:		Applications/Shells
-Requires:	%{name}
+Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion >= 2.0
-Conflicts:	%{name} < 3.4.3-3
 
 %description -n bash-completion-%{name}
 bash-completion for Yum.
