@@ -89,12 +89,16 @@ zapytaniu użytkownika w razie potrzeby.
 
 %package -n bash-completion-%{name}
 Summary:	bash-completion for Yum
+Summary(pl.UTF-8):	Bashowe uzupełnianie parametrów dla Yuma
 Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion >= 2.0
 
 %description -n bash-completion-%{name}
 bash-completion for Yum.
+
+%description -n bash-completion-%{name} -l pl.UTF-8
+Bashowe uzupełnianie parametrów dla Yuma.
 
 %prep
 %setup -q
