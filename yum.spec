@@ -145,6 +145,7 @@ export LC_ALL=en_US.utf8
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sysconfdir}/yum/pluginconf.d,%{_libdir}/yum-plugins,%{_datadir}/yum-plugins}
+
 %{__make} install -j1 \
 	INIT=systemd \
 	UNITDIR=%{systemdunitdir} \
@@ -163,8 +164,8 @@ install -d $RPM_BUILD_ROOT{%{_sysconfdir}/yum/pluginconf.d,%{_libdir}/yum-plugin
 %{__rm} $RPM_BUILD_ROOT/etc/cron.hourly/0yum-hourly.cron
 
 # for now, move repodir/yum.conf back
-mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/repos.d,/yum.repos.d}
-mv $RPM_BUILD_ROOT%{_sysconfdir}/{yum/yum.conf,yum.conf}
+%{__mv} $RPM_BUILD_ROOT%{_sysconfdir}/{yum/repos.d,/yum.repos.d}
+%{__mv} $RPM_BUILD_ROOT%{_sysconfdir}/{yum/yum.conf,yum.conf}
 
 cp -p %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/yum.repos.d/pld.repo
 
@@ -177,11 +178,9 @@ touch $RPM_BUILD_ROOT/var/lib/yum/uuid
 
 %py_postclean %{_datadir}/yum-cli
 
-mv $RPM_BUILD_ROOT%{_localedir}/lt{_LT,}
+%{__mv} $RPM_BUILD_ROOT%{_localedir}/lt{_LT,}
 # duplicate with id, nl and pt
-rm -r $RPM_BUILD_ROOT%{_localedir}/id_ID
-rm -r $RPM_BUILD_ROOT%{_localedir}/nl_NL
-rm -r $RPM_BUILD_ROOT%{_localedir}/pt_PT
+%{__rm} -r $RPM_BUILD_ROOT%{_localedir}/{id_ID,nl_NL,pt_PT}
 
 %find_lang %{name}
 
